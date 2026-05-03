@@ -29,8 +29,12 @@ export function ThemeProvider({ children }: ThemeProviderProps) {
   useEffect(() => {
     const initialTheme = initializeTheme();
     setThemeState(initialTheme);
+    document.documentElement.className = initialTheme;
 
-    const unsubscribe = subscribe(setThemeState);
+    const unsubscribe = subscribe((newTheme) => {
+      setThemeState(newTheme);
+      document.documentElement.className = newTheme;
+    });
 
     return unsubscribe;
   }, []);
@@ -38,6 +42,7 @@ export function ThemeProvider({ children }: ThemeProviderProps) {
   const handleSetTheme = (newTheme: Theme) => {
     setTheme(newTheme);
     setThemeState(newTheme);
+    document.documentElement.className = newTheme;
   };
 
   return (

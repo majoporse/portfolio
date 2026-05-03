@@ -1,5 +1,7 @@
 import { useEffect, useRef, useState } from "react";
 import { getTheme, subscribe } from "../context/themeStore";
+import { useTime } from "framer-motion";
+import { useTheme } from "~/context/ThemeContext";
 
 export function WebGLBackground() {
   const canvasRef = useRef<HTMLCanvasElement>(null);
@@ -7,26 +9,17 @@ export function WebGLBackground() {
   // Theme-aware color configuration
   const themeConfig = {
     dark: {
-      background: "#050505",
-      patternBlack: "#ffffff",
-      patternAccent: "#b93d27",
+      patternBlack: "#0a0a0a",
+      patternAccent: "#D88C64",
     },
     light: {
-      background: "#f5f5f5",
-      patternBlack: "#333333",
-      patternAccent: "#b93d27",
+      patternBlack: "#E5E3D2",
+      patternAccent: "#C47848",
     },
   };
 
   // Get theme from store and subscribe to changes
-  const [theme, setTheme] = useState(getTheme());
-
-  useEffect(() => {
-    const unsubscribe = subscribe((newTheme) => {
-      setTheme(newTheme);
-    });
-    return unsubscribe;
-  }, []);
+  const { theme, setTheme } = useTheme();
 
   const currentTheme = themeConfig[theme];
   const themeRef = useRef(currentTheme);
@@ -38,31 +31,31 @@ export function WebGLBackground() {
   const speedScrollRef = useRef(0);
 
   // Calculate scroll-based values
-  useEffect(() => {
-    const handleScroll = () => {
-      const scrollTop = window.scrollY;
-      const docHeight =
-        document.documentElement.scrollHeight - window.innerHeight;
-      const scrollPercent = docHeight > 0 ? scrollTop / docHeight : 0;
+  // useEffect(() => {
+  //   const handleScroll = () => {
+  //     const scrollTop = window.scrollY;
+  //     const docHeight =
+  //       document.documentElement.scrollHeight - window.innerHeight;
+  //     const scrollPercent = docHeight > 0 ? scrollTop / docHeight : 0;
 
-      // Contrast adjusts from 0 to 800 based on scroll position
-      const scrollContrastValue = scrollPercent * 800;
-      scrollContrastRef.current = scrollContrastValue;
+  //     // Contrast adjusts from 0 to 800 based on scroll position
+  //     const scrollContrastValue = scrollPercent * 500;
+  //     scrollContrastRef.current = scrollContrastValue;
 
-      const scrollScaleValue = scrollPercent * 0.0;
-      scrollScaleRef.current = scrollScaleValue;
+  //     const scrollScaleValue = scrollPercent * 0.0;
+  //     scrollScaleRef.current = scrollScaleValue;
 
-      const speedScrollValue = scrollPercent * -0.017;
-      speedScrollRef.current = speedScrollValue;
-    };
+  //     const speedScrollValue = scrollPercent * -0.017;
+  //     speedScrollRef.current = speedScrollValue;
+  //   };
 
-    window.addEventListener("scroll", handleScroll);
-    handleScroll(); // Initial call
+  //   window.addEventListener("scroll", handleScroll);
+  //   handleScroll(); // Initial call
 
-    return () => {
-      window.removeEventListener("scroll", handleScroll);
-    };
-  }, []);
+  //   return () => {
+  //     window.removeEventListener("scroll", handleScroll);
+  //   };
+  // }, []);
 
   useEffect(() => {
     const canvas = canvasRef.current;
@@ -269,10 +262,10 @@ export function WebGLBackground() {
 
       // Base values for shader parameters
       const baseFrequency = 0.5;
-      const baseContrast = 0.0; // Base contrast
-      const baseSpeed = 0.002;
-      const offsetX = -1;
-      const offsetY = -2;
+      const baseContrast = 300; // Base contrast
+      const baseSpeed = 0.005;
+      const offsetX = -0;
+      const offsetY = -0;
 
       // Combine base values with scroll-based adjustments
       // Contrast goes from 0 (top) to 800 (bottom) based on scroll
@@ -314,21 +307,24 @@ export function WebGLBackground() {
         className="fixed inset-0 pointer-events-none"
         style={{
           zIndex: 0,
-          backgroundColor: currentTheme.background,
         }}
       >
         <canvas ref={canvasRef} className="absolute inset-0 w-full h-full" />
         <div
           className="absolute inset-0"
           style={{
-            backdropFilter: `blur(4px)`,
-            WebkitBackdropFilter: `blur(4px)`,
+            backdropFilter: `blur(2px)`,
+            WebkitBackdropFilter: `blur(2px)`,
           }}
         />
         <div
           className="absolute inset-0"
           style={{
-            background: `radial-gradient(circle, transparent 0%, rgba(0,0,0,1.0) 100%)`,
+            // if the theme is light use less aggressive blur
+            background:
+              theme === "light"
+                ? `radial-gradient(circle, transparent 0%, rgba(0,0,0,0.1) 100%)`
+                : `radial-gradient(circle, transparent 0%, rgba(0,0,0,0.3) 100%)`,
           }}
         />
       </div>
