@@ -16,6 +16,7 @@ html, body {
   color: #d1d1d1;
   overflow-x: hidden;
   font-family: "Inter", sans-serif;
+  position: relative;
 }
 
 @media (prefers-color-scheme: dark) {
