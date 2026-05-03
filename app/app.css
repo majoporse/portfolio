@@ -18,8 +18,8 @@ html, body {
 
 /* Dark theme (default) */
 html.dark body {
-  background-color: #050505;
-  color: #d1d1d1;
+  background-color: var(--color-background);
+  color: var(--color-text-primary);
 }
 
 /* Light theme */
