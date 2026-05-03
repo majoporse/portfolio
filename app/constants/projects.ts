@@ -6,6 +6,8 @@ export interface Project {
   skills: string[];
   link: string;
   linkText: string;
+  blogContent?: string[];
+  images?: string[];
 }
 
 export const projects: Project[] = [
@@ -17,6 +19,12 @@ export const projects: Project[] = [
     skills: ["Microservices", "Python", "K8s"],
     link: "#",
     linkText: "View System Design",
+    blogContent: [
+      "A distributed karaoke system that uses AI to separate vocals from any song in real-time.",
+      "Built with Python microservices running on Kubernetes for scalability.",
+      "Features real-time lyric synchronization across multiple devices.",
+    ],
+    images: [],
   },
   {
     id: "textinator",
@@ -26,6 +34,12 @@ export const projects: Project[] = [
     skills: ["Kafka", "C# .NET", "SignalR"],
     link: "#",
     linkText: "Explore GitHub",
+    blogContent: [
+      "An event-sourced OCR system built to handle thousands of concurrent image processing jobs.",
+      "Uses Apache Kafka for event streaming and C# .NET for the core processing engine.",
+      "SignalR enables real-time status updates to connected clients.",
+    ],
+    images: [],
   },
   {
     id: "juiceworld",
@@ -35,5 +49,11 @@ export const projects: Project[] = [
     skills: ["ASP.NET MVC", "PostgreSQL"],
     link: "#",
     linkText: "Case Study",
+    blogContent: [
+      "A complete e-commerce solution built with ASP.NET MVC and PostgreSQL.",
+      "Features optimized caching strategies for high-traffic scenarios.",
+      "Layered architecture ensures maintainability and scalability.",
+    ],
+    images: [],
   },
 ];

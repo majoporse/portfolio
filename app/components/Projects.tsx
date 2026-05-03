@@ -41,25 +41,45 @@ export function Projects() {
 
               {/* Project content */}
               <div className="relative z-10 pt-24">
-                <div className="flex gap-4 mb-8 flex-wrap">
+                {/* Skills - no squares, just text */}
+                <div className="flex gap-6 mb-8 flex-wrap">
                   {project.skills.map((skill) => (
                     <span
                       key={skill}
-                      className="text-[10px] px-4 py-2 bg-[#b93d27]/10 border border-[#b93d27]/30 text-[#b93d27] uppercase tracking-widest font-bold"
+                      className="text-[11px] text-[#b93d27] uppercase tracking-[0.2em] font-medium"
                     >
                       {skill}
                     </span>
                   ))}
                 </div>
-                <h3 className="text-5xl md:text-7xl font-bold text-white mb-6 text-left">
+
+                <h3 className="text-5xl md:text-7xl font-bold text-white mb-8 text-left">
                   {project.title}
                 </h3>
-                <p className="text-neutral-400 max-w-2xl text-xl mb-10 leading-relaxed text-left">
-                  {project.description}
-                </p>
+
+                {/* Blog-style description */}
+                <div className="max-w-3xl space-y-6 mb-10">
+                  <p className="text-neutral-300 text-xl leading-relaxed text-left">
+                    {project.description}
+                  </p>
+                  {project.blogContent && project.blogContent.length > 0 && (
+                    <div className="space-y-4">
+                      {project.blogContent.map((paragraph, i) => (
+                        <p
+                          key={i}
+                          className="text-neutral-400 text-lg leading-relaxed text-left"
+                        >
+                          {paragraph}
+                        </p>
+                      ))}
+                    </div>
+                  )}
+                </div>
+
+                {/* CTA Link */}
                 <a
                   href={project.link}
-                  className="w-fit text-[12px] font-black tracking-[0.4em] uppercase text-white border-b-2 border-[#b93d27] pb-2 hover:text-[#b93d27] transition-colors"
+                  className="inline-block text-[11px] font-black tracking-[0.4em] uppercase text-white border-b-2 border-[#b93d27] pb-2 hover:text-[#b93d27] transition-colors"
                 >
                   {project.linkText}
                 </a>
