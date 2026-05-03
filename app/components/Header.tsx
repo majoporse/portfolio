@@ -20,6 +20,22 @@ export function Header() {
     ? 'rgba(255, 255, 255, 0.05)' 
     : 'rgba(0, 0, 0, 0.05)';
 
+  const textColor = theme === 'dark' 
+    ? 'text-white' 
+    : 'text-black';
+
+  const textMutedColor = theme === 'dark' 
+    ? 'text-neutral-500' 
+    : 'text-neutral-600';
+
+  const hoverTextColor = theme === 'dark' 
+    ? 'hover:text-white' 
+    : 'hover:text-black';
+
+  const buttonBg = theme === 'dark' 
+    ? 'hover:bg-white hover:text-black' 
+    : 'hover:bg-black hover:text-white';
+
   return (
     <motion.header
       initial={{ y: -50, opacity: 0 }}
@@ -35,26 +51,26 @@ export function Header() {
       <div className="flex justify-between items-center px-6 py-5 md:px-20">
         <div className="flex items-center gap-4">
           <div className="h-3 w-3 bg-[#b93d27]"></div>
-          <span className="text-[11px] font-bold tracking-[0.5em] text-white uppercase">
+          <span className={`text-[11px] font-bold tracking-[0.5em] ${textColor} uppercase`}>
             M. HATALČÍK
           </span>
         </div>
         <nav className="flex gap-12 items-center">
           <a
             href="#work"
-            className="nav-link uppercase text-[10px] tracking-widest font-bold text-neutral-500 hover:text-white transition-colors"
+            className={`nav-link uppercase text-[10px] tracking-widest font-bold ${textMutedColor} ${hoverTextColor} transition-colors`}
           >
             Projects
           </a>
           <a
             href="#experience"
-            className="nav-link uppercase text-[10px] tracking-widest font-bold text-neutral-500 hover:text-white transition-colors"
+            className={`nav-link uppercase text-[10px] tracking-widest font-bold ${textMutedColor} ${hoverTextColor} transition-colors`}
           >
             Experience
           </a>
           <a
             href="mailto:mario.hatalcik@gmail.com"
-            className="px-6 py-2 border border-white/10 rounded-full text-[10px] font-bold tracking-widest uppercase hover:bg-white hover:text-black transition-all"
+            className={`px-6 py-2 border ${theme === 'dark' ? 'border-white/10' : 'border-black/10'} rounded-full text-[10px] font-bold tracking-widest uppercase ${buttonBg} transition-all`}
           >
             Contact
           </a>
