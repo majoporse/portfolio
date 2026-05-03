@@ -1,6 +1,7 @@
 import { motion, useDragControls, useMotionValue, useSpring, useTransform } from "framer-motion";
 import { projects } from "../constants/projects";
-import { useState, useRef, useEffect } from "react";
+import { useState, useRef, useEffect } from 'react';
+import { getTheme, subscribe } from '../context/themeStore';
 
 export function Projects() {
   const [activeIndex, setActiveIndex] = useState(0);
@@ -17,16 +18,30 @@ export function Projects() {
   const containerRef = useRef<HTMLDivElement>(null);
   const totalWidth = projects.length * 288; // 256px card + 32px gap
 
+  // Theme state
+  const [theme, setTheme] = useState(getTheme());
+
+  useEffect(() => {
+    const unsubscribe = subscribe((newTheme) => {
+      setTheme(newTheme);
+    });
+    return unsubscribe;
+  }, []);
+
+  const textColor = theme === 'dark' ? 'text-white' : 'text-black';
+  const textMutedColor = theme === 'dark' ? 'text-neutral-400' : 'text-neutral-600';
+  const borderStyle = theme === 'dark' ? 'border-white/10' : 'border-black/10';
+
   return (
     <div id="work">
       {/* ===== VARIANT A: VERTICAL LIST ===== */}
       <section className="py-32 px-12 md:px-24 relative ">
         <div className="max-w-[1400px] mx-auto">
-          <div className="mb-12 pb-6 border-b border-white/10">
+          <div className={`mb-12 pb-6 border-b ${borderStyle}`}>
             <p className="text-[10px] uppercase tracking-[0.8em] text-[#b93d27] mb-2 font-bold">
               Variant A
             </p>
-            <h2 className="text-6xl md:text-8xl font-black tracking-tighter text-white italic">
+            <h2 className={`text-6xl md:text-8xl font-black tracking-tighter ${textColor} italic`}>
               Vertical List
             </h2>
           </div>
@@ -50,18 +65,17 @@ export function Projects() {
                     ))}
                   </div>
 
-                  <h3 className="text-5xl md:text-7xl font-bold text-white mb-8 text-left">
+                  <h3 className={`text-5xl md:text-7xl font-bold ${textColor} mb-8 text-left`}>
                     {project.title}
                   </h3>
-
-                  <div className="max-w-3xl space-y-6 mb-10">
-                    <p className="text-neutral-300 text-xl leading-relaxed text-left">
-                      {project.description}
-                    </p>
-                  </div>
-
-                  <a href={project.link} className="inline-block text-[11px] font-black tracking-[0.4em] uppercase text-white border-b-2 border-[#b93d27] pb-2 hover:text-[#b93d27] transition-colors">
-                    {project.linkText}
+                  <p className={`${textMutedColor} text-xl leading-relaxed text-left`}>
+                    {project.description}
+                  </p>
+                  <p className={`${textMutedColor} mt-4 text-sm`}>
+                    {project.backgroundLabel}
+                  </p>
+                  <a href={project.link} className={`inline-block text-[11px] font-black tracking-[0.4em] uppercase ${textColor} border-b-2 border-[#b93d27] pb-2 hover:text-[#b93d27] transition-colors`}>
+                    View Project
                   </a>
                 </div>
               </motion.div>
@@ -78,7 +92,7 @@ export function Projects() {
           </p>
         </div>
         <div className="absolute top-6 left-1/2 -translate-x-1/2 z-50">
-          <h2 className="text-6xl md:text-8xl font-black tracking-tighter text-white italic">
+          <h2 className={`text-6xl md:text-8xl font-black tracking-tighter ${textColor} italic`}>
             Spatial Canvas
           </h2>
         </div>
@@ -104,7 +118,7 @@ export function Projects() {
               transition={{ duration: 0.6, delay: index * 0.15 }}
             >
               <div className="relative group cursor-pointer">
-                <div className="relative  border border-white/5 p-8 md:p-12 min-w-[300px] md:min-w-[400px]">
+                <div className={`relative  border ${borderStyle} p-8 md:p-12 min-w-[300px] md:min-w-[400px]`}>
                   <div className="flex gap-4 mb-4 flex-wrap">
                     {project.skills.map((skill) => (
                       <span key={skill} className="text-[10px] text-[#b93d27] uppercase tracking-[0.2em] font-medium">
@@ -112,10 +126,10 @@ export function Projects() {
                       </span>
                     ))}
                   </div>
-                  <h3 className="text-2xl md:text-3xl font-bold text-white mb-3">
+                  <h3 className={`text-2xl md:text-3xl font-bold ${textColor} mb-3`}>
                     {project.title}
                   </h3>
-                  <p className="text-neutral-400 text-sm leading-relaxed">
+                  <p className={`${textMutedColor} text-sm leading-relaxed`}>
                     {project.description}
                   </p>
                 </div>
