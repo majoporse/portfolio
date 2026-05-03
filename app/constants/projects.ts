@@ -8,6 +8,7 @@ export interface Project {
   linkText: string;
   blogContent?: string[];
   images?: string[];
+  position?: { x: number; y: number }; // For spatial canvas variant
 }
 
 export const projects: Project[] = [
@@ -25,6 +26,7 @@ export const projects: Project[] = [
       "Features real-time lyric synchronization across multiple devices.",
     ],
     images: [],
+    position: { x: 200, y: 200 },
   },
   {
     id: "textinator",
@@ -40,6 +42,7 @@ export const projects: Project[] = [
       "SignalR enables real-time status updates to connected clients.",
     ],
     images: [],
+    position: { x: 800, y: 400 },
   },
   {
     id: "juiceworld",
@@ -55,5 +58,6 @@ export const projects: Project[] = [
       "Layered architecture ensures maintainability and scalability.",
     ],
     images: [],
+    position: { x: 400, y: 700 },
   },
 ];
