@@ -1,27 +1,26 @@
 import { useEffect, useRef, useState } from "react";
-import { getTheme, subscribe } from '../context/themeStore';
+import { getTheme, subscribe } from "../context/themeStore";
 
 export function WebGLBackground() {
   const canvasRef = useRef<HTMLCanvasElement>(null);
 
-  
   // Theme-aware color configuration
   const themeConfig = {
     dark: {
-      background: "#050505",
+      background: "#000000",
       patternBlack: "#ffffff",
-      patternAccent: "#b93d27",
+      patternAccent: "#000000",
     },
     light: {
       background: "#f5f5f5",
       patternBlack: "#333333",
-      patternAccent: "#b93d27",
+      patternAccent: "#ffffff",
     },
   };
 
   // Get theme from store and subscribe to changes
   const [theme, setTheme] = useState(getTheme());
-  
+
   useEffect(() => {
     const unsubscribe = subscribe((newTheme) => {
       setTheme(newTheme);
@@ -32,6 +31,37 @@ export function WebGLBackground() {
   const currentTheme = themeConfig[theme];
   const themeRef = useRef(currentTheme);
   themeRef.current = currentTheme;
+
+  // Scroll-based contrast adjustment
+  const [scrollContrast, setScrollContrast] = useState(0);
+  const [scrollScale, setScrollScale] = useState(0);
+  const [speedScroll, setSpeedScroll] = useState(0);
+
+  // Calculate scroll-based values
+  useEffect(() => {
+    const handleScroll = () => {
+      const scrollTop = window.scrollY;
+      const docHeight =
+        document.documentElement.scrollHeight - window.innerHeight;
+      const scrollPercent = docHeight > 0 ? scrollTop / docHeight : 0;
+
+      const scrollContrastValue = scrollPercent * 500; // 0 to 500
+      setScrollContrast(scrollContrastValue);
+
+      const scrollScaleValue = scrollPercent * 0.0; // 0 to 0 (no scale change)
+      setScrollScale(scrollScaleValue);
+
+      const speedScrollValue = scrollPercent * -0.017;
+      setSpeedScroll(speedScrollValue);
+    };
+
+    window.addEventListener("scroll", handleScroll);
+    handleScroll(); // Initial call
+
+    return () => {
+      window.removeEventListener("scroll", handleScroll);
+    };
+  }, []);
 
   useEffect(() => {
     const canvas = canvasRef.current;
@@ -236,25 +266,30 @@ export function WebGLBackground() {
       const deltaTime = currentTime - lastTime;
       lastTime = currentTime;
 
-      // Fixed values for shader parameters
-      const frequency = 0.5;
-      const contrast = 800.0;
-      const speed = 0.02;
-      const offsetX = 0.0;
-      const offsetY = 0.0;
+      // Base values for shader parameters
+      const baseFrequency = 0.5;
+      const baseContrast = 80.0;
+      const baseSpeed = 0.002;
+      const offsetX = -1;
+      const offsetY = -2;
+
+      // Combine base values with scroll-based adjustments
+      const frequency = baseFrequency + scrollScale;
+      const contrast = baseContrast + scrollContrast;
+      const speed = baseSpeed + speedScroll;
 
       accumulatedTime += deltaTime * 0.001 * speed;
 
       glCtx.uniform1f(timeLoc!, accumulatedTime);
       glCtx.uniform1f(frequencyLoc!, frequency);
       glCtx.uniform1f(contrastLoc!, contrast);
-      
+
       const accentRgb = hexToRgb(themeRef.current.patternAccent);
       glCtx.uniform3f(accentColorLoc!, accentRgb.r, accentRgb.g, accentRgb.b);
-      
+
       const blackRgb = hexToRgb(themeRef.current.patternBlack);
       glCtx.uniform3f(blackColorLoc!, blackRgb.r, blackRgb.g, blackRgb.b);
-      
+
       glCtx.uniform2f(offsetLoc!, offsetX, offsetY);
 
       glCtx.drawArrays(glCtx.TRIANGLE_STRIP, 0, 4);
@@ -295,8 +330,6 @@ export function WebGLBackground() {
           }}
         />
       </div>
-
-
     </>
   );
 }
