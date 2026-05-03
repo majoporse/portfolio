@@ -306,27 +306,35 @@ export function Projects() {
 
         {/* Thumbnail Strip */}
         <div className="flex-1 flex items-center justify-center py-12 px-12">
-          <div className="flex gap-8 items-center overflow-x-auto px-8 py-8">
+          <div className="flex gap-12 items-center overflow-x-auto px-12 py-12">
             {projects.map((project, index) => (
               <motion.div
                 key={`gallery-${project.id}`}
                 className={`cursor-pointer flex-shrink-0 transition-all duration-300 ${
-                  index === activeIndex ? 'scale-110 z-10' : 'scale-90 opacity-50 hover:scale-100 hover:opacity-75'
+                  index === activeIndex ? 'scale-115 z-10' : 'scale-90 opacity-40 hover:scale-100 hover:opacity-70'
                 }`}
                 onClick={() => setActiveIndex(index)}
-                whileHover={{ scale: index === activeIndex ? 1.1 : 1.05 }}
+                whileHover={{ scale: index === activeIndex ? 1.15 : 1.08 }}
               >
                 <div
-                  className={`w-48 h-32 md:w-64 md:h-48 bg-[#0a0a0a] border-2 transition-all duration-300 flex flex-col justify-end p-4 ${
+                  className={`w-56 h-56 md:w-72 md:h-72 bg-[#0a0a0a] border-2 transition-all duration-300 flex flex-col justify-end p-6 relative overflow-hidden ${
                     index === activeIndex ? 'border-[#b93d27]' : 'border-white/10'
                   }`}
                 >
-                  <h4 className="text-lg md:text-xl font-bold text-white truncate">
-                    {project.title}
-                  </h4>
-                  <p className="text-[10px] text-[#b93d27] uppercase tracking-wider">
-                    {project.skills[0]}
-                  </p>
+                  {/* Square card visual */}
+                  <div className="absolute inset-0 bg-gradient-to-t from-black/80 to-transparent" />
+                  <div className="relative z-10">
+                    <h4 className="text-xl md:text-2xl font-bold text-white mb-1 truncate">
+                      {project.title}
+                    </h4>
+                    <div className="flex gap-2 flex-wrap mb-2">
+                      {project.skills.slice(0, 2).map((skill) => (
+                        <span key={skill} className="text-[9px] text-[#b93d27] uppercase tracking-wider">
+                          {skill}
+                        </span>
+                      ))}
+                    </div>
+                  </div>
                 </div>
               </motion.div>
             ))}
