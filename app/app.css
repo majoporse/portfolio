@@ -3,13 +3,23 @@
 @theme {
   --font-sans: "Inter", ui-sans-serif, system-ui, sans-serif,
     "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol", "Noto Color Emoji";
+  --font-serif: "Playfair Display", Georgia, serif;
+
+  --color-accent: #b93d27;
+  --color-background: #050505;
+  --color-text-primary: #d1d1d1;
+  --color-text-secondary: #555;
 }
 
-html,
-body {
-  @apply bg-white dark:bg-gray-950;
+html, body {
+  background-color: #050505;
+  color: #d1d1d1;
+  overflow-x: hidden;
+  font-family: "Inter", sans-serif;
+}
 
-  @media (prefers-color-scheme: dark) {
+@media (prefers-color-scheme: dark) {
+  body {
     color-scheme: dark;
   }
 }
