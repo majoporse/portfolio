@@ -2,8 +2,8 @@ type Theme = 'light' | 'dark';
 
 const STORAGE_KEY = 'portfolio-theme';
 
-// Module-level theme state (for SSR compatibility)
-let currentTheme: Theme = 'dark';
+  // Module-level theme state (for SSR compatibility)
+  let currentTheme: Theme = 'light';
 const subscribers: Set<(theme: Theme) => void> = new Set();
 
 export function getTheme(): Theme {
@@ -39,9 +39,9 @@ export function initializeTheme(): Theme {
     return 'light';
   }
 
-  currentTheme = 'dark';
-  subscribers.forEach((callback) => callback('dark'));
-  return 'dark';
+  currentTheme = 'light';
+  subscribers.forEach((callback) => callback('light'));
+  return 'light';
 }
 
 export function toggleTheme(): void {

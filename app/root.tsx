@@ -30,7 +30,7 @@ export const links: Route.LinksFunction = () => [
 export function Layout({ children }: { children: React.ReactNode }) {
   const theme = typeof window !== 'undefined'
     ? getTheme()
-    : 'dark';
+    : 'light';
 
   return (
     <html lang="en" className={theme}>
