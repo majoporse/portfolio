@@ -2,37 +2,39 @@ import { motion, useDragControls, useMotionValue, useSpring } from "framer-motio
 import { projects } from "../constants/projects";
 import { useState } from "react";
 
-// ===== VARIANT SELECTOR =====
-// Change this value to switch variants:
-// 'vertical' | 'spatial' | 'masonry' | 'carousel'
-const ACTIVE_VARIANT = 'vertical';
-
 export function Projects() {
-  // ===== VARIANT A: VERTICAL LIST =====
-  if (ACTIVE_VARIANT === 'vertical') {
-    return (
-      <section id="work" className="py-32 px-12 md:px-24 relative">
+  const [activeIndex, setActiveIndex] = useState(0);
+  const dragX = useMotionValue(0);
+  const dragControls = useDragControls();
+  const canvasX = useMotionValue(0);
+  const canvasY = useMotionValue(0);
+  const springX = useSpring(canvasX, { stiffness: 100, damping: 20 });
+  const springY = useSpring(canvasY, { stiffness: 100, damping: 20 });
+
+  return (
+    <div id="work">
+      {/* ===== VARIANT A: VERTICAL LIST ===== */}
+      <section className="py-32 px-12 md:px-24 relative bg-[#050505]">
         <div className="max-w-[1400px] mx-auto">
-          <div className="mb-24">
-            <p className="text-[10px] uppercase tracking-[0.8em] text-neutral-600 mb-6 font-bold">
-              Selected Work
+          <div className="mb-12 pb-6 border-b border-white/10">
+            <p className="text-[10px] uppercase tracking-[0.8em] text-[#b93d27] mb-2 font-bold">
+              Variant A
             </p>
-            <h2 className="text-8xl md:text-[10rem] font-black tracking-tighter text-white italic text-left">
-              Projects.
+            <h2 className="text-6xl md:text-8xl font-black tracking-tighter text-white italic">
+              Vertical List
             </h2>
           </div>
 
           <div className="flex flex-col gap-48">
             {projects.map((project, index) => (
               <motion.div
-                key={project.id}
+                key={`vertical-${project.id}`}
                 className="group relative"
                 initial={{ opacity: 0, y: 60 }}
                 whileInView={{ opacity: 1, y: 0 }}
                 viewport={{ once: true, margin: "-100px" }}
                 transition={{ duration: 0.8, delay: index * 0.1 }}
               >
-                {/* Background Label */}
                 <div
                   className="absolute -top-12 left-0 w-full"
                   style={{ fontSize: "20vw", fontWeight: 900, color: "rgba(255,255,255,0.01)", whiteSpace: "nowrap", zIndex: 0 }}
@@ -47,14 +49,10 @@ export function Projects() {
                   </motion.div>
                 </div>
 
-                {/* Project content */}
                 <div className="relative z-10 pt-24">
                   <div className="flex gap-6 mb-8 flex-wrap">
                     {project.skills.map((skill) => (
-                      <span
-                        key={skill}
-                        className="text-[11px] text-[#b93d27] uppercase tracking-[0.2em] font-medium"
-                      >
+                      <span key={skill} className="text-[11px] text-[#b93d27] uppercase tracking-[0.2em] font-medium">
                         {skill}
                       </span>
                     ))}
@@ -68,24 +66,9 @@ export function Projects() {
                     <p className="text-neutral-300 text-xl leading-relaxed text-left">
                       {project.description}
                     </p>
-                    {project.blogContent && project.blogContent.length > 0 && (
-                      <div className="space-y-4">
-                        {project.blogContent.map((paragraph, i) => (
-                          <p
-                            key={i}
-                            className="text-neutral-400 text-lg leading-relaxed text-left"
-                          >
-                            {paragraph}
-                          </p>
-                        ))}
-                      </div>
-                    )}
                   </div>
 
-                  <a
-                    href={project.link}
-                    className="inline-block text-[11px] font-black tracking-[0.4em] uppercase text-white border-b-2 border-[#b93d27] pb-2 hover:text-[#b93d27] transition-colors"
-                  >
+                  <a href={project.link} className="inline-block text-[11px] font-black tracking-[0.4em] uppercase text-white border-b-2 border-[#b93d27] pb-2 hover:text-[#b93d27] transition-colors">
                     {project.linkText}
                   </a>
                 </div>
@@ -94,38 +77,20 @@ export function Projects() {
           </div>
         </div>
       </section>
-    );
-  }
 
-  // ===== VARIANT B: SPATIAL CANVAS =====
-  if (ACTIVE_VARIANT === 'spatial') {
-    const dragControls = useDragControls();
-    const canvasX = useMotionValue(0);
-    const canvasY = useMotionValue(0);
-    const springX = useSpring(canvasX, { stiffness: 100, damping: 20 });
-    const springY = useSpring(canvasY, { stiffness: 100, damping: 20 });
-
-    return (
-      <section 
-        id="work" 
-        className="min-h-screen overflow-hidden relative cursor-grab active:cursor-grabbing"
-        onPointerDown={(e) => dragControls.start(e)}
-      >
-        {/* Instructions */}
+      {/* ===== VARIANT B: SPATIAL CANVAS ===== */}
+      <section className="min-h-screen overflow-hidden relative bg-[#080808]">
         <div className="absolute top-6 left-12 z-50">
-          <p className="text-[10px] uppercase tracking-[0.4em] text-neutral-500">
-            Drag to explore • Projects arranged on canvas
+          <p className="text-[10px] uppercase tracking-[0.4em] text-[#b93d27] font-bold">
+            Variant B - Drag to explore
           </p>
         </div>
-
-        {/* Canvas Header */}
         <div className="absolute top-6 left-1/2 -translate-x-1/2 z-50">
           <h2 className="text-6xl md:text-8xl font-black tracking-tighter text-white italic">
-            Projects.
+            Spatial Canvas
           </h2>
         </div>
 
-        {/* Canvas Container */}
         <motion.div
           className="absolute inset-0"
           style={{ x: springX, y: springY }}
@@ -136,7 +101,7 @@ export function Projects() {
         >
           {projects.map((project, index) => (
             <motion.div
-              key={project.id}
+              key={`spatial-${project.id}`}
               className="absolute"
               style={{
                 left: project.position?.x || 200 + index * 300,
@@ -147,22 +112,13 @@ export function Projects() {
               transition={{ duration: 0.6, delay: index * 0.15 }}
             >
               <div className="relative group cursor-pointer">
-                {/* Background Label */}
-                <div
-                  className="absolute -top-8 -left-8 opacity-[0.03]"
-                  style={{ fontSize: "15vw", fontWeight: 900, whiteSpace: "nowrap" }}
-                >
+                <div className="absolute -top-8 -left-8 opacity-[0.03]" style={{ fontSize: "15vw", fontWeight: 900, whiteSpace: "nowrap" }}>
                   {project.backgroundLabel}
                 </div>
-
-                {/* Project Card */}
                 <div className="relative bg-[#0a0a0a] border border-white/5 p-8 md:p-12 min-w-[300px] md:min-w-[400px]">
                   <div className="flex gap-4 mb-4 flex-wrap">
                     {project.skills.map((skill) => (
-                      <span
-                        key={skill}
-                        className="text-[10px] text-[#b93d27] uppercase tracking-[0.2em] font-medium"
-                      >
+                      <span key={skill} className="text-[10px] text-[#b93d27] uppercase tracking-[0.2em] font-medium">
                         {skill}
                       </span>
                     ))}
@@ -179,27 +135,23 @@ export function Projects() {
           ))}
         </motion.div>
       </section>
-    );
-  }
 
-  // ===== VARIANT C: MASONRY GRID =====
-  if (ACTIVE_VARIANT === 'masonry') {
-    return (
-      <section id="work" className="py-32 px-12 md:px-24 relative">
+      {/* ===== VARIANT C: MASONRY GRID ===== */}
+      <section className="py-32 px-12 md:px-24 relative bg-[#050505]">
         <div className="max-w-[1800px] mx-auto">
-          <div className="mb-24">
-            <p className="text-[10px] uppercase tracking-[0.8em] text-neutral-600 mb-6 font-bold">
-              Selected Work
+          <div className="mb-12 pb-6 border-b border-white/10">
+            <p className="text-[10px] uppercase tracking-[0.8em] text-[#b93d27] mb-2 font-bold">
+              Variant C
             </p>
-            <h2 className="text-8xl md:text-[10rem] font-black tracking-tighter text-white italic text-left">
-              Projects.
+            <h2 className="text-6xl md:text-8xl font-black tracking-tighter text-white italic">
+              Masonry Grid
             </h2>
           </div>
 
           <div className="columns-1 md:columns-2 lg:columns-3 gap-8 space-y-8">
             {projects.map((project, index) => (
               <motion.div
-                key={project.id}
+                key={`masonry-${project.id}`}
                 className="break-inside-avoid mb-8 group"
                 initial={{ opacity: 0, y: 30 }}
                 whileInView={{ opacity: 1, y: 0 }}
@@ -207,24 +159,16 @@ export function Projects() {
                 transition={{ duration: 0.5, delay: index * 0.1 }}
               >
                 <div className="bg-[#0a0a0a] border border-white/5 p-8 group-hover:border-[#b93d27]/30 transition-colors duration-300">
-                  <div
-                    className="text-[8vw] font-black text-white/3 mb-6 leading-none"
-                    style={{ color: "rgba(255,255,255,0.03)" }}
-                  >
+                  <div className="text-[8vw] font-black text-white/3 mb-6 leading-none" style={{ color: "rgba(255,255,255,0.03)" }}>
                     {project.backgroundLabel}
                   </div>
-
                   <div className="flex gap-3 mb-4 flex-wrap">
                     {project.skills.map((skill) => (
-                      <span
-                        key={skill}
-                        className="text-[9px] text-[#b93d27] uppercase tracking-[0.15em]"
-                      >
+                      <span key={skill} className="text-[9px] text-[#b93d27] uppercase tracking-[0.15em]">
                         {skill}
                       </span>
                     ))}
                   </div>
-
                   <h3 className="text-xl md:text-2xl font-bold text-white mb-3">
                     {project.title}
                   </h3>
@@ -237,30 +181,20 @@ export function Projects() {
           </div>
         </div>
       </section>
-    );
-  }
 
-  // ===== VARIANT D: HORIZONTAL CAROUSEL =====
-  if (ACTIVE_VARIANT === 'carousel') {
-    const [activeIndex, setActiveIndex] = useState(0);
-    const dragX = useMotionValue(0);
-
-    return (
-      <section id="work" className="min-h-screen relative overflow-hidden">
-        {/* Header */}
+      {/* ===== VARIANT D: HORIZONTAL CAROUSEL ===== */}
+      <section className="min-h-screen relative overflow-hidden bg-[#080808]">
         <div className="absolute top-6 left-12 z-50">
-          <p className="text-[10px] uppercase tracking-[0.4em] text-neutral-500">
-            Drag to navigate • {activeIndex + 1} / {projects.length}
+          <p className="text-[10px] uppercase tracking-[0.4em] text-[#b93d27] font-bold">
+            Variant D - Drag to navigate • {activeIndex + 1} / {projects.length}
           </p>
         </div>
-
         <div className="absolute top-6 left-1/2 -translate-x-1/2 z-50">
           <h2 className="text-6xl md:text-8xl font-black tracking-tighter text-white italic">
-            Projects.
+            Horizontal Carousel
           </h2>
         </div>
 
-        {/* Carousel Track */}
         <motion.div
           className="flex h-screen items-center"
           style={{ x: dragX }}
@@ -278,41 +212,25 @@ export function Projects() {
           }}
         >
           {projects.map((project, index) => (
-            <div
-              key={project.id}
-              className="min-w-full h-screen flex items-center justify-center px-12 md:px-24"
-            >
+            <div key={`carousel-${project.id}`} className="min-w-full h-screen flex items-center justify-center px-12 md:px-24">
               <div className="max-w-4xl text-center">
-                <div
-                  className="text-[15vw] font-black text-white/5 mb-8 leading-none"
-                  style={{ color: "rgba(255,255,255,0.02)" }}
-                >
+                <div className="text-[15vw] font-black text-white/5 mb-8 leading-none" style={{ color: "rgba(255,255,255,0.02)" }}>
                   {project.backgroundLabel}
                 </div>
-
                 <div className="flex gap-4 mb-6 justify-center flex-wrap">
                   {project.skills.map((skill) => (
-                    <span
-                      key={skill}
-                      className="text-[11px] text-[#b93d27] uppercase tracking-[0.2em]"
-                    >
+                    <span key={skill} className="text-[11px] text-[#b93d27] uppercase tracking-[0.2em]">
                       {skill}
                     </span>
                   ))}
                 </div>
-
                 <h3 className="text-5xl md:text-7xl font-bold text-white mb-6">
                   {project.title}
                 </h3>
-
                 <p className="text-neutral-300 text-xl leading-relaxed max-w-2xl mx-auto mb-8">
                   {project.description}
                 </p>
-
-                <a
-                  href={project.link}
-                  className="inline-block text-[11px] font-black tracking-[0.4em] uppercase text-white border-b-2 border-[#b93d27] pb-2 hover:text-[#b93d27] transition-colors"
-                >
+                <a href={project.link} className="inline-block text-[11px] font-black tracking-[0.4em] uppercase text-white border-b-2 border-[#b93d27] pb-2 hover:text-[#b93d27] transition-colors">
                   {project.linkText}
                 </a>
               </div>
@@ -320,7 +238,6 @@ export function Projects() {
           ))}
         </motion.div>
 
-        {/* Navigation Dots */}
         <div className="absolute bottom-12 left-1/2 -translate-x-1/2 flex gap-3 z-50">
           {projects.map((_, index) => (
             <button
@@ -329,16 +246,11 @@ export function Projects() {
                 setActiveIndex(index);
                 dragX.set(-index * window.innerWidth);
               }}
-              className={`w-2 h-2 rounded-full transition-all ${
-                index === activeIndex ? 'bg-[#b93d27] w-8' : 'bg-white/30'
-              }`}
+              className={`w-2 h-2 rounded-full transition-all ${index === activeIndex ? 'bg-[#b93d27] w-8' : 'bg-white/30'}`}
             />
           ))}
         </div>
       </section>
-    );
-  }
-
-  // Default fallback
-  return null;
+    </div>
+  );
 }
