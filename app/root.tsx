@@ -28,11 +28,9 @@ export const links: Route.LinksFunction = () => [
 ];
 
 export function Layout({ children }: { children: React.ReactNode }) {
-  // Read from module store for SSR compatibility
-  // This runs on both server and client
-  const theme = typeof window !== 'undefined' 
-    ? getTheme() 
-    : 'dark'; // Default for SSR
+  const theme = typeof window !== 'undefined'
+    ? getTheme()
+    : 'dark';
 
   return (
     <html lang="en" className={theme}>
@@ -71,7 +69,7 @@ export function ErrorBoundary({ error }: Route.ErrorBoundaryProps) {
     details =
       error.status === 404
         ? "The requested page could not be found."
-        : error.statusText || details;
+        : error.statusText || error.data || details;
   } else if (import.meta.env.DEV && error && error instanceof Error) {
     details = error.message;
     stack = error.stack;
