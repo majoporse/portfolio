@@ -2,7 +2,6 @@ type Theme = 'light' | 'dark';
 
 const STORAGE_KEY = 'portfolio-theme';
 
-// Module-level theme state (for SSR compatibility)
 let currentTheme: Theme = 'light';
 const subscribers: Set<(theme: Theme) => void> = new Set();
 
@@ -12,7 +11,9 @@ export function getTheme(): Theme {
 
 export function setTheme(theme: Theme): void {
   currentTheme = theme;
-  localStorage.setItem(STORAGE_KEY, theme);
+  if (typeof window !== 'undefined') {
+    localStorage.setItem(STORAGE_KEY, theme);
+  }
   subscribers.forEach((callback) => callback(theme));
 }
 
@@ -24,7 +25,10 @@ export function subscribe(callback: (theme: Theme) => void): () => void {
 }
 
 export function initializeTheme(): Theme {
-  // Check localStorage first
+  if (typeof window === 'undefined') {
+    return 'light';
+  }
+
   const saved = localStorage.getItem(STORAGE_KEY);
   if (saved === 'light' || saved === 'dark') {
     currentTheme = saved;
@@ -32,7 +36,6 @@ export function initializeTheme(): Theme {
     return saved;
   }
 
-  // Check system preference
   if (window.matchMedia('(prefers-color-scheme: light)').matches) {
     currentTheme = 'light';
     subscribers.forEach((callback) => callback('light'));
