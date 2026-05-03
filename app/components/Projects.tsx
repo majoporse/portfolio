@@ -20,7 +20,7 @@ export function Projects() {
   return (
     <div id="work">
       {/* ===== VARIANT A: VERTICAL LIST ===== */}
-      <section className="py-32 px-12 md:px-24 relative bg-[#050505]">
+      <section className="py-32 px-12 md:px-24 relative ">
         <div className="max-w-[1400px] mx-auto">
           <div className="mb-12 pb-6 border-b border-white/10">
             <p className="text-[10px] uppercase tracking-[0.8em] text-[#b93d27] mb-2 font-bold">
@@ -71,7 +71,7 @@ export function Projects() {
       </section>
 
       {/* ===== VARIANT B: SPATIAL CANVAS ===== */}
-      <section className="min-h-screen overflow-hidden relative bg-[#080808]">
+      <section className="min-h-screen overflow-hidden relative ">
         <div className="absolute top-6 left-12 z-50">
           <p className="text-[10px] uppercase tracking-[0.4em] text-[#b93d27] font-bold">
             Variant B - Drag to explore
@@ -104,7 +104,7 @@ export function Projects() {
               transition={{ duration: 0.6, delay: index * 0.15 }}
             >
               <div className="relative group cursor-pointer">
-                <div className="relative bg-[#0a0a0a] border border-white/5 p-8 md:p-12 min-w-[300px] md:min-w-[400px]">
+                <div className="relative  border border-white/5 p-8 md:p-12 min-w-[300px] md:min-w-[400px]">
                   <div className="flex gap-4 mb-4 flex-wrap">
                     {project.skills.map((skill) => (
                       <span key={skill} className="text-[10px] text-[#b93d27] uppercase tracking-[0.2em] font-medium">
@@ -126,7 +126,7 @@ export function Projects() {
       </section>
 
       {/* ===== VARIANT C: MASONRY GRID ===== */}
-      <section className="py-32 px-12 md:px-24 relative bg-[#050505]">
+      <section className="py-32 px-12 md:px-24 relative ">
         <div className="max-w-[1800px] mx-auto">
           <div className="mb-12 pb-6 border-b border-white/10">
             <p className="text-[10px] uppercase tracking-[0.8em] text-[#b93d27] mb-2 font-bold">
@@ -149,7 +149,7 @@ export function Projects() {
                 onMouseEnter={() => setHoveredProject(project.id)}
                 onMouseLeave={() => setHoveredProject(null)}
               >
-                <div className="bg-[#0a0a0a] border border-white/5 p-8 group-hover:border-[#b93d27]/50 transition-all duration-300">
+                <div className=" border border-white/5 p-8 group-hover:border-[#b93d27]/50 transition-all duration-300">
                   <div className="flex gap-3 mb-4 flex-wrap">
                     {project.skills.map((skill) => (
                       <span key={skill} className="text-[9px] text-[#b93d27] uppercase tracking-[0.15em]">
@@ -185,7 +185,7 @@ export function Projects() {
               initial={{ scale: 0.9, opacity: 0 }}
               animate={{ scale: 1, opacity: 1 }}
               exit={{ scale: 0.9, opacity: 0 }}
-              className="relative bg-[#0a0a0a] border border-white/10 max-w-3xl w-full p-12"
+              className="relative  border border-white/10 max-w-3xl w-full p-12"
             >
               {(() => {
                 const project = projects.find(p => p.id === hoveredProject);
@@ -232,7 +232,7 @@ export function Projects() {
       </section>
 
       {/* ===== VARIANT D: HORIZONTAL CAROUSEL ===== */}
-      <section className="min-h-screen relative overflow-hidden bg-[#080808]">
+      <section className="min-h-screen relative overflow-hidden ">
         <div className="absolute top-6 left-12 z-50">
           <p className="text-[10px] uppercase tracking-[0.4em] text-[#b93d27] font-bold">
             Variant D - Drag to navigate • {activeIndex + 1} / {projects.length}
@@ -299,7 +299,7 @@ export function Projects() {
       </section>
 
       {/* ===== VARIANT E: THUMBNAIL GALLERY ===== */}
-      <section className="min-h-screen relative bg-[#050505] flex flex-col">
+      <section className="min-h-screen relative  flex flex-col">
         <div className="py-12 px-12 md:px-24 border-b border-white/10">
           <p className="text-[10px] uppercase tracking-[0.8em] text-[#b93d27] mb-2 font-bold">
             Variant E
@@ -336,7 +336,7 @@ export function Projects() {
                   whileHover={{ scale: isSelected ? 1.15 : 1.08 }}
                 >
                   <div
-                    className={`w-56 h-56 md:w-72 md:h-72 bg-[#0a0a0a] border-2 transition-all duration-300 flex flex-col justify-end p-6 relative overflow-hidden ${
+                    className={`w-56 h-56 md:w-72 md:h-72  border-2 transition-all duration-300 flex flex-col justify-end p-6 relative overflow-hidden ${
                       isSelected ? 'border-[#b93d27]' : 'border-white/10'
                     }`}
                   >
@@ -385,7 +385,7 @@ export function Projects() {
               initial={{ opacity: 0, y: 20 }}
               animate={{ opacity: 1, y: 0 }}
               transition={{ duration: 0.3 }}
-              className="bg-[#0a0a0a] border border-white/10 p-8 md:p-12"
+              className=" border border-white/10 p-8 md:p-12"
             >
               <div className="flex gap-4 mb-6 flex-wrap">
                 {projects[activeIndex].skills.map((skill) => (
