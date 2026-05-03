@@ -12,7 +12,7 @@ export function Hero() {
     return unsubscribe;
   }, []);
 
-  const hatalcikColor = theme === 'dark' ? 'text-[#ebdddd]' : 'text-[#555555]';
+  const hatalcikColor = theme === 'dark' ? 'text-[#ebdddd]' : 'text-black';
 
   return (
     <section className="min-h-screen flex flex-col justify-center px-12 md:px-24 select-none overflow-hidden relative">
