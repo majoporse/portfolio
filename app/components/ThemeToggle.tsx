@@ -13,7 +13,6 @@ export function ThemeToggle() {
       aria-label={`Switch to ${theme === 'dark' ? 'light' : 'dark'} mode`}
     >
       {theme === 'dark' ? (
-        // Sun icon for dark mode (switching to light)
         <svg
           xmlns="http://www.w3.org/2000/svg"
           width="24"
@@ -36,7 +35,6 @@ export function ThemeToggle() {
           <line x1="18.36" y1="5.64" x2="19.78" y2="4.22" />
         </svg>
       ) : (
-        // Moon icon for light mode (switching to dark)
         <svg
           xmlns="http://www.w3.org/2000/svg"
           width="24"
