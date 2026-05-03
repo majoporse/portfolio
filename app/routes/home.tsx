@@ -1,5 +1,4 @@
 import type { Route } from "./+types/home";
-import { Header } from "../components/Header";
 import { Hero } from "../components/Hero";
 import { Projects } from "../components/Projects";
 import { Experience } from "../components/Experience";
@@ -17,7 +16,6 @@ export default function Home() {
   return (
     <>
       <ScrollProgress />
-      <Header />
       <main>
         <Hero />
         <Projects />
