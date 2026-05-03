@@ -45,10 +45,11 @@ export function WebGLBackground() {
         document.documentElement.scrollHeight - window.innerHeight;
       const scrollPercent = docHeight > 0 ? scrollTop / docHeight : 0;
 
-      const scrollContrastValue = scrollPercent * 500; // 0 to 500
+      // Contrast adjusts from 0 to 800 based on scroll position
+      const scrollContrastValue = scrollPercent * 800;
       scrollContrastRef.current = scrollContrastValue;
 
-      const scrollScaleValue = scrollPercent * 0.0; // 0 to 0 (no scale change)
+      const scrollScaleValue = scrollPercent * 0.0;
       scrollScaleRef.current = scrollScaleValue;
 
       const speedScrollValue = scrollPercent * -0.017;
@@ -268,12 +269,13 @@ export function WebGLBackground() {
 
       // Base values for shader parameters
       const baseFrequency = 0.5;
-      const baseContrast = 80.0;
+      const baseContrast = 0.0; // Base contrast
       const baseSpeed = 0.002;
       const offsetX = -1;
       const offsetY = -2;
 
       // Combine base values with scroll-based adjustments
+      // Contrast goes from 0 (top) to 800 (bottom) based on scroll
       const frequency = baseFrequency + scrollScaleRef.current;
       const contrast = baseContrast + scrollContrastRef.current;
       const speed = baseSpeed + speedScrollRef.current;
