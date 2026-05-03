@@ -310,10 +310,19 @@ export function Projects() {
         </div>
 
         {/* Carousel Strip */}
-        <div className="flex-1 flex items-center justify-center py-12">
-          <div 
-            ref={containerRef}
-            className="flex gap-8 items-center px-12"
+        <div className="flex-1 flex items-center py-12 relative overflow-hidden">
+          <motion.div
+            drag="x"
+            dragConstraints={{ left: -200, right: 200 }}
+            className="flex gap-8 items-center px-12 cursor-grab active:cursor-grabbing"
+            onDragEnd={(e, info) => {
+              const threshold = 50;
+              if (info.offset.x < -threshold && activeIndex < projects.length - 1) {
+                setActiveIndex(activeIndex + 1);
+              } else if (info.offset.x > threshold && activeIndex > 0) {
+                setActiveIndex(activeIndex - 1);
+              }
+            }}
           >
             {projects.map((project, index) => {
               const isSelected = index === activeIndex;
@@ -348,7 +357,7 @@ export function Projects() {
                 </motion.div>
               );
             })}
-          </div>
+          </motion.div>
         </div>
 
         {/* Minimap Navigation */}
