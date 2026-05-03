@@ -1,18 +1,6 @@
 import { motion } from "framer-motion";
-import { useEffect, useState } from 'react';
-import { getTheme, subscribe } from '../context/themeStore';
 
 export function Hero() {
-  const [theme, setTheme] = useState(getTheme());
-
-  useEffect(() => {
-    const unsubscribe = subscribe((newTheme) => {
-      setTheme(newTheme);
-    });
-    return unsubscribe;
-  }, []);
-
-  const hatalcikColor = theme === 'dark' ? 'text-[#ebdddd]' : 'text-black';
 
   return (
     <section className="min-h-screen flex flex-col justify-center px-12 md:px-24 select-none overflow-hidden relative">
@@ -23,7 +11,7 @@ export function Hero() {
           transition={{ duration: 1.2 }}
         >
           <h1
-            className="text-[clamp(3rem,16vw,22rem)] font-black leading-[0.85] tracking-[-0.05em] uppercase text-[#b93d27]"
+            className="text-[clamp(3rem,16vw,22rem)] font-black leading-[0.85] tracking-[-0.05em] uppercase theme-text-accent"
             style={{ fontFamily: "Inter, sans-serif" }}
           >
             MÁRIO
@@ -35,7 +23,7 @@ export function Hero() {
           transition={{ duration: 1.2, delay: 0.2 }}
         >
           <h1
-            className={`text-[clamp(3rem,16vw,22rem)] font-black leading-[0.85] tracking-[-0.05em] text-left ${hatalcikColor}`}
+            className="text-[clamp(3rem,16vw,22rem)] font-black leading-[0.85] tracking-[-0.05em] text-left theme-text-primary"
             style={{ fontFamily: "'Playfair Display', serif", fontStyle: "italic" }}
           >
             HATALČÍK
