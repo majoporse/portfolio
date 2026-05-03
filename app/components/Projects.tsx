@@ -248,7 +248,7 @@ export function Projects() {
           className="flex h-screen items-center"
           style={{ x: dragX }}
           drag="x"
-          dragConstraints={{ left: -((projects.length - 1) * window.innerWidth), right: 0 }}
+          dragConstraints={{ left: -10000, right: 10000 }}
           dragElastic={0.1}
           onDragEnd={(e, info) => {
             const threshold = 100;
@@ -257,7 +257,7 @@ export function Projects() {
             } else if (info.offset.x > threshold && activeIndex > 0) {
               setActiveIndex(activeIndex - 1);
             }
-            dragX.set(-activeIndex * window.innerWidth);
+            dragX.set(-activeIndex * (typeof window !== 'undefined' ? window.innerWidth : 1024));
           }}
         >
           {projects.map((project, index) => (
@@ -290,7 +290,7 @@ export function Projects() {
               key={index}
               onClick={() => {
                 setActiveIndex(index);
-                dragX.set(-index * window.innerWidth);
+                dragX.set(-index * (typeof window !== 'undefined' ? window.innerWidth : 1024));
               }}
               className={`w-2 h-2 rounded-full transition-all ${index === activeIndex ? 'bg-[#b93d27] w-8' : 'bg-white/30'}`}
             />
