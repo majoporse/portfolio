@@ -7,14 +7,14 @@ export function WebGLBackground() {
   // Theme-aware color configuration
   const themeConfig = {
     dark: {
-      background: "#000000",
+      background: "#050505",
       patternBlack: "#ffffff",
-      patternAccent: "#000000",
+      patternAccent: "#b93d27",
     },
     light: {
       background: "#f5f5f5",
       patternBlack: "#333333",
-      patternAccent: "#ffffff",
+      patternAccent: "#b93d27",
     },
   };
 
