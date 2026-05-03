@@ -292,6 +292,85 @@ export function Projects() {
           ))}
         </div>
       </section>
+
+      {/* ===== VARIANT E: THUMBNAIL GALLERY ===== */}
+      <section className="min-h-screen relative bg-[#050505] flex flex-col">
+        <div className="py-12 px-12 md:px-24 border-b border-white/10">
+          <p className="text-[10px] uppercase tracking-[0.8em] text-[#b93d27] mb-2 font-bold">
+            Variant E
+          </p>
+          <h2 className="text-6xl md:text-8xl font-black tracking-tighter text-white italic">
+            Thumbnail Gallery
+          </h2>
+        </div>
+
+        {/* Thumbnail Strip */}
+        <div className="flex-1 flex items-center justify-center py-12 px-12">
+          <div className="flex gap-8 items-center overflow-x-auto px-8 py-8">
+            {projects.map((project, index) => (
+              <motion.div
+                key={`gallery-${project.id}`}
+                className={`cursor-pointer flex-shrink-0 transition-all duration-300 ${
+                  index === activeIndex ? 'scale-110 z-10' : 'scale-90 opacity-50 hover:scale-100 hover:opacity-75'
+                }`}
+                onClick={() => setActiveIndex(index)}
+                whileHover={{ scale: index === activeIndex ? 1.1 : 1.05 }}
+              >
+                <div
+                  className={`w-48 h-32 md:w-64 md:h-48 bg-[#0a0a0a] border-2 transition-all duration-300 flex flex-col justify-end p-4 ${
+                    index === activeIndex ? 'border-[#b93d27]' : 'border-white/10'
+                  }`}
+                >
+                  <h4 className="text-lg md:text-xl font-bold text-white truncate">
+                    {project.title}
+                  </h4>
+                  <p className="text-[10px] text-[#b93d27] uppercase tracking-wider">
+                    {project.skills[0]}
+                  </p>
+                </div>
+              </motion.div>
+            ))}
+          </div>
+        </div>
+
+        {/* Preview Section */}
+        <div className="px-12 md:px-24 pb-16">
+          <div className="max-w-4xl mx-auto">
+            <motion.div
+              key={projects[activeIndex].id}
+              initial={{ opacity: 0, y: 20 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ duration: 0.3 }}
+              className="bg-[#0a0a0a] border border-white/10 p-8 md:p-12"
+            >
+              <div className="flex gap-4 mb-6 flex-wrap">
+                {projects[activeIndex].skills.map((skill) => (
+                  <span key={skill} className="text-[11px] text-[#b93d27] uppercase tracking-[0.2em] font-medium">
+                    {skill}
+                  </span>
+                ))}
+              </div>
+              <h3 className="text-3xl md:text-5xl font-bold text-white mb-4">
+                {projects[activeIndex].title}
+              </h3>
+              <p className="text-neutral-300 text-lg leading-relaxed mb-6">
+                {projects[activeIndex].description}
+              </p>
+              {projects[activeIndex].blogContent?.map((paragraph, i) => (
+                <p key={i} className="text-neutral-400 text-base leading-relaxed mb-4">
+                  {paragraph}
+                </p>
+              ))}
+              <a
+                href={projects[activeIndex].link}
+                className="inline-block mt-4 text-[11px] font-black tracking-[0.4em] uppercase text-white border-b-2 border-[#b93d27] pb-2 hover:text-[#b93d27] transition-colors"
+              >
+                {projects[activeIndex].linkText}
+              </a>
+            </motion.div>
+          </div>
+        </div>
+      </section>
     </div>
   );
 }
