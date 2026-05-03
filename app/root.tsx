@@ -9,6 +9,9 @@ import {
 
 import type { Route } from "./+types/root";
 import "./app.css";
+import { getTheme } from "./context/themeStore";
+import { ThemeProvider } from "./context/ThemeContext";
+import { ThemeToggle } from "./components/ThemeToggle";
 import { WebGLBackground } from "./components/WebGLBackground";
 
 export const links: Route.LinksFunction = () => [
@@ -25,8 +28,14 @@ export const links: Route.LinksFunction = () => [
 ];
 
 export function Layout({ children }: { children: React.ReactNode }) {
+  // Read from module store for SSR compatibility
+  // This runs on both server and client
+  const theme = typeof window !== 'undefined' 
+    ? getTheme() 
+    : 'dark'; // Default for SSR
+
   return (
-    <html lang="en">
+    <html lang="en" className={theme}>
       <head>
         <meta charSet="utf-8" />
         <meta name="viewport" content="width=device-width, initial-scale=1" />
@@ -44,10 +53,11 @@ export function Layout({ children }: { children: React.ReactNode }) {
 
 export default function App() {
   return (
-    <>
+    <ThemeProvider>
       <WebGLBackground />
       <Outlet />
-    </>
+      <ThemeToggle />
+    </ThemeProvider>
   );
 }
 
