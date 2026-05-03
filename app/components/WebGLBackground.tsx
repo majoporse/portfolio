@@ -4,10 +4,6 @@ import { getTheme, subscribe } from '../context/themeStore';
 export function WebGLBackground() {
   const canvasRef = useRef<HTMLCanvasElement>(null);
 
-  // Post-processing parameters
-  const [blur, setBlur] = useState(4); // Glass blur intensity (pixels)
-  const [vignette, setVignette] = useState(1.0); // Vignette darkness (0.0 = transparent, 1.0 = black)
-  const [vignetteStrength, setVignetteStrength] = useState(1.0); // Vignette strength multiplier (0.0 - 2.0)
   
   // Theme-aware color configuration
   const themeConfig = {
@@ -34,58 +30,8 @@ export function WebGLBackground() {
   }, []);
 
   const currentTheme = themeConfig[theme];
-
-  const [offsetX, setOffsetX] = useState(0.0); // X offset for starting position
-  const [offsetY, setOffsetY] = useState(0.0); // Y offset for starting position
-
-  // Shader parameters (using refs to avoid recreating WebGL context)
-  const frequencyRef = useRef(0.1); // Scale/zoom of noise pattern (0.01 - 2.0)
-  const contrastRef = useRef(800.0); // Pattern density/chaos (10.0 - 2000.0)
-  const speedRef = useRef(0.5); // Animation speed multiplier (0.0 - 1.0)
-  const offsetXRef = useRef(0.0); // X offset for starting position
-  const offsetYRef = useRef(0.0); // Y offset for starting position
-
-  // Sync refs with state (optional - can be removed if not needed for UI)
-  const [frequency, setFrequency] = useState(0.5);
-  const [contrast, setContrast] = useState(0);
-  const [speed, setSpeed] = useState(0.02);
-
-  const [scrollContrast, setScrollContrast] = useState(0);
-  const [scrollScale, setScrollScale] = useState(0);
-  const [speedScroll, setSpeedScroll] = useState(0);
-
-  // Update refs when state changes
-  frequencyRef.current = frequency + scrollScale; // Combine base frequency with scroll-based scale
-  contrastRef.current = contrast + scrollContrast; // Combine base contrast with scroll-based contrast
-  speedRef.current = speed + speedScroll;
-  offsetXRef.current = offsetX;
-  offsetYRef.current = offsetY;
-
-  // Calculate scroll-based contrast (100 at top, 1 at bottom) and scale (0 at top, 1 at bottom)
-  useEffect(() => {
-    const handleScroll = () => {
-      const scrollTop = window.scrollY;
-      const docHeight =
-        document.documentElement.scrollHeight - window.innerHeight;
-      const scrollPercent = docHeight > 0 ? scrollTop / docHeight : 0;
-
-      const scrollContrastValue = scrollPercent * 500; // 100 to 1
-      setScrollContrast(scrollContrastValue);
-
-      const scrollScaleValue = scrollPercent * 0.0;
-      setScrollScale(scrollScaleValue);
-
-      const speedScrollValue = scrollPercent * -0.017;
-      setSpeedScroll(speedScrollValue);
-    };
-
-    window.addEventListener("scroll", handleScroll);
-    handleScroll(); // Initial call
-
-    return () => {
-      window.removeEventListener("scroll", handleScroll);
-    };
-  }, []);
+  const themeRef = useRef(currentTheme);
+  themeRef.current = currentTheme;
 
   useEffect(() => {
     const canvas = canvasRef.current;
@@ -194,15 +140,10 @@ export function WebGLBackground() {
         vec2 uv = gl_FragCoord.xy / u_resolution.xy + u_offset;
         float n = snoise(vec3(uv * u_frequency, u_time));
 
-        // Generate pattern using contrast for density
-        // Note: sin() creates repeating patterns - higher contrast = more repeats
         float pattern = sin(n * u_contrast);
 
-        // Use contrast to control red/black ratio (0 = only black, 1 = only red)
-        // Map contrast (0-2000) to ratio (0-1)
         float ratio = u_contrast / 2000.0;
 
-        // Convert ratio to threshold: 0% red → threshold = 1, 100% red → threshold = -1
         float threshold = 1.0 - (ratio * 2.0);
         float stepVal = step(threshold, pattern);
 
@@ -295,19 +236,26 @@ export function WebGLBackground() {
       const deltaTime = currentTime - lastTime;
       lastTime = currentTime;
 
-      accumulatedTime += deltaTime * 0.001 * speedRef.current;
+      // Fixed values for shader parameters
+      const frequency = 0.5;
+      const contrast = 800.0;
+      const speed = 0.02;
+      const offsetX = 0.0;
+      const offsetY = 0.0;
+
+      accumulatedTime += deltaTime * 0.001 * speed;
 
       glCtx.uniform1f(timeLoc!, accumulatedTime);
-      glCtx.uniform1f(frequencyLoc!, frequencyRef.current);
-      glCtx.uniform1f(contrastLoc!, contrastRef.current);
+      glCtx.uniform1f(frequencyLoc!, frequency);
+      glCtx.uniform1f(contrastLoc!, contrast);
       
-      const accentRgb = hexToRgb(currentTheme.patternAccent);
+      const accentRgb = hexToRgb(themeRef.current.patternAccent);
       glCtx.uniform3f(accentColorLoc!, accentRgb.r, accentRgb.g, accentRgb.b);
       
-      const blackRgb = hexToRgb(currentTheme.patternBlack);
+      const blackRgb = hexToRgb(themeRef.current.patternBlack);
       glCtx.uniform3f(blackColorLoc!, blackRgb.r, blackRgb.g, blackRgb.b);
       
-      glCtx.uniform2f(offsetLoc!, offsetXRef.current, offsetYRef.current);
+      glCtx.uniform2f(offsetLoc!, offsetX, offsetY);
 
       glCtx.drawArrays(glCtx.TRIANGLE_STRIP, 0, 4);
 
@@ -336,14 +284,14 @@ export function WebGLBackground() {
         <div
           className="absolute inset-0"
           style={{
-            backdropFilter: `blur(${blur}px)`,
-            WebkitBackdropFilter: `blur(${blur}px)`,
+            backdropFilter: `blur(4px)`,
+            WebkitBackdropFilter: `blur(4px)`,
           }}
         />
         <div
           className="absolute inset-0"
           style={{
-            background: `radial-gradient(circle, transparent 0%, rgba(0,0,0,${vignette * vignetteStrength}) 100%)`,
+            background: `radial-gradient(circle, transparent 0%, rgba(0,0,0,1.0) 100%)`,
           }}
         />
       </div>
