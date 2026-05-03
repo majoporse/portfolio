@@ -11,6 +11,44 @@
   --color-text-secondary: #555;
 }
 
+/* Theme-specific text colors */
+html.dark .theme-text-primary { color: #d1d1d1; }
+html.dark .theme-text-muted { color: #555; }
+html.dark .theme-text-accent { color: #b93d27; }
+html.dark .theme-border-subtle { border-color: rgba(255, 255, 255, 0.05); }
+html.dark .theme-border-medium { border-color: rgba(255, 255, 255, 0.1); }
+
+html.light .theme-text-primary { color: #1a1a1a; }
+html.light .theme-text-muted { color: #555; }
+html.light .theme-text-accent { color: #b93d27; }
+html.light .theme-border-subtle { border-color: rgba(0, 0, 0, 0.05); }
+html.light .theme-border-medium { border-color: rgba(0, 0, 0, 0.1); }
+
+/* Theme-specific background colors for header */
+html.dark .theme-header-bg { 
+  background-color: rgba(5, 5, 5, 0.8); 
+  backdrop-filter: blur(15px);
+}
+
+html.light .theme-header-bg { 
+  background-color: rgba(245, 245, 245, 0.8); 
+  backdrop-filter: blur(15px);
+}
+
+/* Theme-specific hover colors */
+html.dark .theme-hover-text:hover { color: #ffffff; }
+html.light .theme-hover-text:hover { color: #000000; }
+
+html.dark .theme-button-hover:hover { 
+  background-color: #ffffff; 
+  color: #000000; 
+}
+
+html.light .theme-button-hover:hover { 
+  background-color: #000000; 
+  color: #ffffff; 
+}
+
 html, body {
   overflow-x: hidden;
   font-family: "Inter", sans-serif;
