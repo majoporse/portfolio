@@ -1,6 +1,25 @@
 import { motion } from "framer-motion";
+import { useEffect, useState } from 'react';
+import { getTheme, subscribe } from '../context/themeStore';
 
 export function Header() {
+  const [theme, setTheme] = useState(getTheme());
+
+  useEffect(() => {
+    const unsubscribe = subscribe((newTheme) => {
+      setTheme(newTheme);
+    });
+    return unsubscribe;
+  }, []);
+
+  const headerBg = theme === 'dark' 
+    ? 'rgba(5, 5, 5, 0.8)' 
+    : 'rgba(245, 245, 245, 0.8)';
+
+  const borderColor = theme === 'dark' 
+    ? 'rgba(255, 255, 255, 0.05)' 
+    : 'rgba(0, 0, 0, 0.05)';
+
   return (
     <motion.header
       initial={{ y: -50, opacity: 0 }}
@@ -8,9 +27,9 @@ export function Header() {
       transition={{ duration: 1 }}
       className="fixed top-0 left-0 w-full z-100"
       style={{
-        background: "rgba(5, 5, 5, 0.8)",
+        background: headerBg,
         backdropFilter: "blur(15px)",
-        borderBottom: "1px solid rgba(255, 255, 255, 0.05)",
+        borderBottom: `1px solid ${borderColor}`,
       }}
     >
       <div className="flex justify-between items-center px-6 py-5 md:px-20">
