@@ -4,7 +4,16 @@ import { getTheme, subscribe } from '../context/themeStore';
 export function WebGLBackground() {
   const canvasRef = useRef<HTMLCanvasElement>(null);
 
-  
+  // Post-processing parameters (your original settings)
+  const [blur, setBlur] = useState(15);
+  const [vignette, setVignette] = useState(0.4);
+  const [vignetteStrength, setVignetteStrength] = useState(1.0);
+  const [frequency, setFrequency] = useState(0.1);
+  const [contrast, setContrast] = useState(800.0);
+  const [speed, setSpeed] = useState(1.0);
+  const [offsetX, setOffsetX] = useState(0.0);
+  const [offsetY, setOffsetY] = useState(0.0);
+
   // Theme-aware color configuration
   const themeConfig = {
     dark: {
@@ -33,6 +42,20 @@ export function WebGLBackground() {
   const themeRef = useRef(currentTheme);
   themeRef.current = currentTheme;
 
+  // Shader refs
+  const frequencyRef = useRef(frequency);
+  const contrastRef = useRef(contrast);
+  const speedRef = useRef(speed);
+  const offsetXRef = useRef(offsetX);
+  const offsetYRef = useRef(offsetY);
+
+  // Sync refs with state
+  frequencyRef.current = frequency;
+  contrastRef.current = contrast;
+  speedRef.current = speed;
+  offsetXRef.current = offsetX;
+  offsetYRef.current = offsetY;
+
   useEffect(() => {
     const canvas = canvasRef.current;
     if (!canvas) return;
@@ -44,7 +67,6 @@ export function WebGLBackground() {
       console.log("WebGL not supported");
       return;
     }
-    console.log("WebGL context created successfully");
 
     // Capture canvas and gl in closure
     const canvasCtx = canvas;
@@ -139,14 +161,10 @@ export function WebGLBackground() {
       void main() {
         vec2 uv = gl_FragCoord.xy / u_resolution.xy + u_offset;
         float n = snoise(vec3(uv * u_frequency, u_time));
-
         float pattern = sin(n * u_contrast);
-
         float ratio = u_contrast / 2000.0;
-
         float threshold = 1.0 - (ratio * 2.0);
         float stepVal = step(threshold, pattern);
-
         gl_FragColor = vec4(mix(u_blackColor, u_accentColor, stepVal), 1.0);
       }
     `;
@@ -236,18 +254,11 @@ export function WebGLBackground() {
       const deltaTime = currentTime - lastTime;
       lastTime = currentTime;
 
-      // Fixed values for shader parameters
-      const frequency = 0.5;
-      const contrast = 800.0;
-      const speed = 0.02;
-      const offsetX = 0.0;
-      const offsetY = 0.0;
-
-      accumulatedTime += deltaTime * 0.001 * speed;
+      accumulatedTime += deltaTime * 0.001 * speedRef.current;
 
       glCtx.uniform1f(timeLoc!, accumulatedTime);
-      glCtx.uniform1f(frequencyLoc!, frequency);
-      glCtx.uniform1f(contrastLoc!, contrast);
+      glCtx.uniform1f(frequencyLoc!, frequencyRef.current);
+      glCtx.uniform1f(contrastLoc!, contrastRef.current);
       
       const accentRgb = hexToRgb(themeRef.current.patternAccent);
       glCtx.uniform3f(accentColorLoc!, accentRgb.r, accentRgb.g, accentRgb.b);
@@ -255,7 +266,7 @@ export function WebGLBackground() {
       const blackRgb = hexToRgb(themeRef.current.patternBlack);
       glCtx.uniform3f(blackColorLoc!, blackRgb.r, blackRgb.g, blackRgb.b);
       
-      glCtx.uniform2f(offsetLoc!, offsetX, offsetY);
+      glCtx.uniform2f(offsetLoc!, offsetXRef.current, offsetYRef.current);
 
       glCtx.drawArrays(glCtx.TRIANGLE_STRIP, 0, 4);
 
@@ -284,19 +295,127 @@ export function WebGLBackground() {
         <div
           className="absolute inset-0"
           style={{
-            backdropFilter: `blur(4px)`,
-            WebkitBackdropFilter: `blur(4px)`,
+            backdropFilter: `blur(${blur}px)`,
+            WebkitBackdropFilter: `blur(${blur}px)`,
           }}
         />
         <div
           className="absolute inset-0"
           style={{
-            background: `radial-gradient(circle, transparent 0%, rgba(0,0,0,1.0) 100%)`,
+            background: `radial-gradient(circle, transparent 0%, rgba(0,0,0,${vignette * vignetteStrength}) 100%)`,
           }}
         />
       </div>
 
+      {/* Parameter controls for fine-tuning */}
+      <div className="fixed top-4 right-4 bg-black/80 text-white p-4 rounded-lg z-50">
+        <h3 className="text-sm font-bold mb-3">Background Parameters</h3>
 
+        <div className="space-y-2 text-xs">
+          <div>
+            <label>Blur: {blur}px</label>
+            <input
+              type="range"
+              min="0"
+              max="20"
+              value={blur}
+              onChange={(e) => setBlur(Number(e.target.value))}
+              className="w-full"
+            />
+          </div>
+
+          <div>
+            <label>Vignette Darkness: {vignette}</label>
+            <input
+              type="range"
+              min="0"
+              max="1"
+              step="0.05"
+              value={vignette}
+              onChange={(e) => setVignette(Number(e.target.value))}
+              className="w-full"
+            />
+          </div>
+
+          <div>
+            <label>Vignette Strength: {vignetteStrength}</label>
+            <input
+              type="range"
+              min="0"
+              max="2"
+              step="0.1"
+              value={vignetteStrength}
+              onChange={(e) => setVignetteStrength(Number(e.target.value))}
+              className="w-full"
+            />
+          </div>
+
+          <div>
+            <label>Frequency: {frequency.toFixed(2)}</label>
+            <input
+              type="range"
+              min="0.01"
+              max="2"
+              step="0.01"
+              value={frequency}
+              onChange={(e) => setFrequency(Number(e.target.value))}
+              className="w-full"
+            />
+          </div>
+
+          <div>
+            <label>Contrast: {contrast.toFixed(0)}</label>
+            <input
+              type="range"
+              min="0"
+              max="2000"
+              step="50"
+              value={contrast}
+              onChange={(e) => setContrast(Number(e.target.value))}
+              className="w-full"
+            />
+          </div>
+
+          <div>
+            <label>Speed: {speed.toFixed(2)}</label>
+            <input
+              type="range"
+              min="0"
+              max="2"
+              step="0.05"
+              value={speed}
+              onChange={(e) => setSpeed(Number(e.target.value))}
+              className="w-full"
+            />
+          </div>
+
+          <div>
+            <label>Offset X: {offsetX.toFixed(2)}</label>
+            <input
+              type="range"
+              min="-5"
+              max="5"
+              step="0.1"
+              value={offsetX}
+              onChange={(e) => setOffsetX(Number(e.target.value))}
+              className="w-full"
+            />
+          </div>
+
+          <div>
+            <label>Offset Y: {offsetY.toFixed(2)}</label>
+            <input
+              type="range"
+              min="-5"
+              max="5"
+              step="0.1"
+              value={offsetY}
+              onChange={(e) => setOffsetY(Number(e.target.value))}
+              className="w-full"
+            />
+          </div>
+        </div>
+      </div>
     </>
   );
 }
