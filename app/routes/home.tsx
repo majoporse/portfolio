@@ -1,13 +1,29 @@
 import type { Route } from "./+types/home";
-import { Welcome } from "../welcome/welcome";
+import { Header } from "../components/Header";
+import { Hero } from "../components/Hero";
+import { Projects } from "../components/Projects";
+import { Experience } from "../components/Experience";
+import { Footer } from "../components/Footer";
+import { ScrollProgress } from "../components/ScrollProgress";
 
 export function meta({}: Route.MetaArgs) {
   return [
-    { title: "New React Router App" },
-    { name: "description", content: "Welcome to React Router!" },
+    { title: "Mário Hatalčík | Full-stack Developer" },
+    { name: "description", content: "Full-stack developer portfolio showcasing projects and experience" },
   ];
 }
 
 export default function Home() {
-  return <Welcome />;
+  return (
+    <>
+      <ScrollProgress />
+      <Header />
+      <main>
+        <Hero />
+        <Projects />
+        <Experience />
+      </main>
+      <Footer />
+    </>
+  );
 }
