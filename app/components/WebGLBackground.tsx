@@ -1,16 +1,104 @@
 import { useEffect, useRef, useState } from "react";
+import { getTheme, subscribe } from '../context/themeStore';
 
 export function WebGLBackground() {
   const canvasRef = useRef<HTMLCanvasElement>(null);
-  const [blur, setBlur] = useState(15);
-  const [vignette, setVignette] = useState(0.4);
+
+  // Post-processing parameters
+  const [blur, setBlur] = useState(4); // Glass blur intensity (pixels)
+  const [vignette, setVignette] = useState(1.0); // Vignette darkness (0.0 = transparent, 1.0 = black)
+  const [vignetteStrength, setVignetteStrength] = useState(1.0); // Vignette strength multiplier (0.0 - 2.0)
+  
+  // Theme-aware color configuration
+  const themeConfig = {
+    dark: {
+      background: "#050505",
+      patternBlack: "#ffffff",
+      patternAccent: "#b93d27",
+    },
+    light: {
+      background: "#f5f5f5",
+      patternBlack: "#333333",
+      patternAccent: "#b93d27",
+    },
+  };
+
+  // Get theme from store and subscribe to changes
+  const [theme, setTheme] = useState(getTheme());
+  
+  useEffect(() => {
+    const unsubscribe = subscribe((newTheme) => {
+      setTheme(newTheme);
+    });
+    return unsubscribe;
+  }, []);
+
+  const currentTheme = themeConfig[theme];
+
+  const [offsetX, setOffsetX] = useState(0.0); // X offset for starting position
+  const [offsetY, setOffsetY] = useState(0.0); // Y offset for starting position
+
+  // Shader parameters (using refs to avoid recreating WebGL context)
+  const frequencyRef = useRef(0.1); // Scale/zoom of noise pattern (0.01 - 2.0)
+  const contrastRef = useRef(800.0); // Pattern density/chaos (10.0 - 2000.0)
+  const speedRef = useRef(0.5); // Animation speed multiplier (0.0 - 1.0)
+  const offsetXRef = useRef(0.0); // X offset for starting position
+  const offsetYRef = useRef(0.0); // Y offset for starting position
+
+  // Sync refs with state (optional - can be removed if not needed for UI)
+  const [frequency, setFrequency] = useState(0.5);
+  const [contrast, setContrast] = useState(0);
+  const [speed, setSpeed] = useState(0.02);
+
+  const [scrollContrast, setScrollContrast] = useState(0);
+  const [scrollScale, setScrollScale] = useState(0);
+  const [speedScroll, setSpeedScroll] = useState(0);
+
+  // Update refs when state changes
+  frequencyRef.current = frequency + scrollScale; // Combine base frequency with scroll-based scale
+  contrastRef.current = contrast + scrollContrast; // Combine base contrast with scroll-based contrast
+  speedRef.current = speed + speedScroll;
+  offsetXRef.current = offsetX;
+  offsetYRef.current = offsetY;
+
+  // Calculate scroll-based contrast (100 at top, 1 at bottom) and scale (0 at top, 1 at bottom)
+  useEffect(() => {
+    const handleScroll = () => {
+      const scrollTop = window.scrollY;
+      const docHeight =
+        document.documentElement.scrollHeight - window.innerHeight;
+      const scrollPercent = docHeight > 0 ? scrollTop / docHeight : 0;
+
+      const scrollContrastValue = scrollPercent * 500; // 100 to 1
+      setScrollContrast(scrollContrastValue);
+
+      const scrollScaleValue = scrollPercent * 0.0;
+      setScrollScale(scrollScaleValue);
+
+      const speedScrollValue = scrollPercent * -0.017;
+      setSpeedScroll(speedScrollValue);
+    };
+
+    window.addEventListener("scroll", handleScroll);
+    handleScroll(); // Initial call
+
+    return () => {
+      window.removeEventListener("scroll", handleScroll);
+    };
+  }, []);
 
   useEffect(() => {
     const canvas = canvasRef.current;
     if (!canvas) return;
 
-    const gl = canvas.getContext("webgl") || canvas.getContext("experimental-webgl") as WebGLRenderingContext | null;
-    if (!gl) return;
+    const gl =
+      canvas.getContext("webgl") ||
+      (canvas.getContext("experimental-webgl") as WebGLRenderingContext | null);
+    if (!gl) {
+      console.log("WebGL not supported");
+      return;
+    }
+    console.log("WebGL context created successfully");
 
     // Capture canvas and gl in closure
     const canvasCtx = canvas;
@@ -32,6 +120,9 @@ export function WebGLBackground() {
       uniform float u_time;
       uniform float u_frequency;
       uniform float u_contrast;
+      uniform vec3 u_accentColor;
+      uniform vec3 u_blackColor;
+      uniform vec2 u_offset;
 
       // 3D Simplex Noise
       vec3 mod289(vec3 x) { return x - floor(x * (1.0 / 289.0)) * 289.0; }
@@ -100,20 +191,22 @@ export function WebGLBackground() {
       }
 
       void main() {
-        vec2 uv = gl_FragCoord.xy / u_resolution.xy;
-        uv *= u_frequency;
+        vec2 uv = gl_FragCoord.xy / u_resolution.xy + u_offset;
+        float n = snoise(vec3(uv * u_frequency, u_time));
 
-        float noiseVal = snoise(vec3(uv * 10.0, u_time * 0.5));
-        float pattern = sin(noiseVal * u_contrast);
+        // Generate pattern using contrast for density
+        // Note: sin() creates repeating patterns - higher contrast = more repeats
+        float pattern = sin(n * u_contrast);
 
-        float hardEdge = step(0.0, pattern);
+        // Use contrast to control red/black ratio (0 = only black, 1 = only red)
+        // Map contrast (0-2000) to ratio (0-1)
+        float ratio = u_contrast / 2000.0;
 
-        vec3 baseColor = vec3(0.0);
-        vec3 accentColor = vec3(1.0, 0.16, 0.16);
+        // Convert ratio to threshold: 0% red → threshold = 1, 100% red → threshold = -1
+        float threshold = 1.0 - (ratio * 2.0);
+        float stepVal = step(threshold, pattern);
 
-        vec3 finalColor = mix(baseColor, accentColor, hardEdge);
-
-        gl_FragColor = vec4(finalColor, 1.0);
+        gl_FragColor = vec4(mix(u_blackColor, u_accentColor, stepVal), 1.0);
       }
     `;
 
@@ -131,7 +224,10 @@ export function WebGLBackground() {
     }
 
     const vertexShader = compileShader(vertexShaderSource, glCtx.VERTEX_SHADER);
-    const fragmentShader = compileShader(fragmentShaderSource, glCtx.FRAGMENT_SHADER);
+    const fragmentShader = compileShader(
+      fragmentShaderSource,
+      glCtx.FRAGMENT_SHADER,
+    );
 
     if (!vertexShader || !fragmentShader) return;
 
@@ -164,13 +260,9 @@ export function WebGLBackground() {
     const timeLoc = glCtx.getUniformLocation(program, "u_time");
     const frequencyLoc = glCtx.getUniformLocation(program, "u_frequency");
     const contrastLoc = glCtx.getUniformLocation(program, "u_contrast");
-
-    // Parameters
-    const params = {
-      frequency: 0.1,
-      contrast: 800.0,
-      speed: 1.0,
-    };
+    const accentColorLoc = glCtx.getUniformLocation(program, "u_accentColor");
+    const blackColorLoc = glCtx.getUniformLocation(program, "u_blackColor");
+    const offsetLoc = glCtx.getUniformLocation(program, "u_offset");
 
     // Time tracking
     let accumulatedTime = 0;
@@ -187,17 +279,38 @@ export function WebGLBackground() {
     window.addEventListener("resize", resize);
     resize();
 
+    // Helper to convert hex color to RGB
+    const hexToRgb = (hex: string) => {
+      const result = /^#?([a-f\d]{2})([a-f\d]{2})([a-f\d]{2})$/i.exec(hex);
+      return result
+        ? {
+            r: parseInt(result[1], 16) / 255,
+            g: parseInt(result[2], 16) / 255,
+            b: parseInt(result[3], 16) / 255,
+          }
+        : { r: 0.725, g: 0.239, b: 0.153 };
+    };
+
     function render(currentTime: number) {
       const deltaTime = currentTime - lastTime;
       lastTime = currentTime;
 
-      accumulatedTime += (deltaTime * 0.001) * params.speed;
+      accumulatedTime += deltaTime * 0.001 * speedRef.current;
 
       glCtx.uniform1f(timeLoc!, accumulatedTime);
-      glCtx.uniform1f(frequencyLoc!, params.frequency);
-      glCtx.uniform1f(contrastLoc!, params.contrast);
+      glCtx.uniform1f(frequencyLoc!, frequencyRef.current);
+      glCtx.uniform1f(contrastLoc!, contrastRef.current);
+      
+      const accentRgb = hexToRgb(currentTheme.patternAccent);
+      glCtx.uniform3f(accentColorLoc!, accentRgb.r, accentRgb.g, accentRgb.b);
+      
+      const blackRgb = hexToRgb(currentTheme.patternBlack);
+      glCtx.uniform3f(blackColorLoc!, blackRgb.r, blackRgb.g, blackRgb.b);
+      
+      glCtx.uniform2f(offsetLoc!, offsetXRef.current, offsetYRef.current);
 
       glCtx.drawArrays(glCtx.TRIANGLE_STRIP, 0, 4);
+
       requestAnimationFrame(render);
     }
 
@@ -211,24 +324,31 @@ export function WebGLBackground() {
   }, []);
 
   return (
-    <div className="fixed inset-0 pointer-events-none z-[-1]">
-      <canvas
-        ref={canvasRef}
-        className="absolute inset-0 w-full h-full"
-      />
+    <>
       <div
-        className="absolute inset-0"
+        className="fixed inset-0 pointer-events-none"
         style={{
-          backdropFilter: `blur(${blur}px)`,
-          WebkitBackdropFilter: `blur(${blur}px)`,
+          zIndex: 0,
+          backgroundColor: currentTheme.background,
         }}
-      />
-      <div
-        className="absolute inset-0"
-        style={{
-          background: `radial-gradient(circle, transparent 0%, rgba(0,0,0,${vignette}) 100%)`,
-        }}
-      />
-    </div>
+      >
+        <canvas ref={canvasRef} className="absolute inset-0 w-full h-full" />
+        <div
+          className="absolute inset-0"
+          style={{
+            backdropFilter: `blur(${blur}px)`,
+            WebkitBackdropFilter: `blur(${blur}px)`,
+          }}
+        />
+        <div
+          className="absolute inset-0"
+          style={{
+            background: `radial-gradient(circle, transparent 0%, rgba(0,0,0,${vignette * vignetteStrength}) 100%)`,
+          }}
+        />
+      </div>
+
+
+    </>
   );
 }
