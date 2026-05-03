@@ -1,5 +1,7 @@
 type Theme = 'light' | 'dark';
 
+const STORAGE_KEY = 'portfolio-theme';
+
 // Module-level theme state (for SSR compatibility)
 let currentTheme: Theme = 'dark';
 const subscribers: Set<(theme: Theme) => void> = new Set();
@@ -10,7 +12,7 @@ export function getTheme(): Theme {
 
 export function setTheme(theme: Theme): void {
   currentTheme = theme;
-  localStorage.setItem('portfolio-theme', theme);
+  localStorage.setItem(STORAGE_KEY, theme);
   subscribers.forEach((callback) => callback(theme));
 }
 
@@ -23,7 +25,7 @@ export function subscribe(callback: (theme: Theme) => void): () => void {
 
 export function initializeTheme(): Theme {
   // Check localStorage first
-  const saved = localStorage.getItem('portfolio-theme');
+  const saved = localStorage.getItem(STORAGE_KEY);
   if (saved === 'light' || saved === 'dark') {
     currentTheme = saved;
     subscribers.forEach((callback) => callback(saved));

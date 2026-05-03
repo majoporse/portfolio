@@ -1,4 +1,4 @@
-import { createContext, useContext, useState, useEffect, ReactNode } from 'react';
+import { createContext, useContext, useState, useEffect, type ReactNode } from 'react';
 import { getTheme, setTheme, toggleTheme as toggleThemeStore, subscribe, initializeTheme } from './themeStore';
 
 export type Theme = 'light' | 'dark';
@@ -27,11 +27,9 @@ export function ThemeProvider({ children }: ThemeProviderProps) {
   const [theme, setThemeState] = useState<Theme>(getTheme());
 
   useEffect(() => {
-    // Initialize theme on client
     const initialTheme = initializeTheme();
     setThemeState(initialTheme);
 
-    // Subscribe to changes
     const unsubscribe = subscribe(setThemeState);
 
     return unsubscribe;
@@ -43,7 +41,7 @@ export function ThemeProvider({ children }: ThemeProviderProps) {
   };
 
   return (
-    <ThemeContext.Provider value={{ theme, setTheme: handleSetTheme, toggleTheme }}>
+    <ThemeContext.Provider value={{ theme, setTheme: handleSetTheme, toggleTheme: toggleThemeStore }}>
       {children}
     </ThemeContext.Provider>
   );
