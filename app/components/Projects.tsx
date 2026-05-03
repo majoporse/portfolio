@@ -4,6 +4,7 @@ import { useState } from "react";
 
 export function Projects() {
   const [activeIndex, setActiveIndex] = useState(0);
+  const [hoveredProject, setHoveredProject] = useState<string | null>(null);
   const dragX = useMotionValue(0);
   const dragControls = useDragControls();
   const canvasX = useMotionValue(0);
@@ -35,8 +36,6 @@ export function Projects() {
                 viewport={{ once: true, margin: "-100px" }}
                 transition={{ duration: 0.8, delay: index * 0.1 }}
               >
-
-
                 <div className="relative z-10 pt-24">
                   <div className="flex gap-6 mb-8 flex-wrap">
                     {project.skills.map((skill) => (
@@ -99,7 +98,7 @@ export function Projects() {
               animate={{ opacity: 1, scale: 1 }}
               transition={{ duration: 0.6, delay: index * 0.15 }}
             >
-                <div className="relative group cursor-pointer">
+              <div className="relative group cursor-pointer">
                 <div className="relative bg-[#0a0a0a] border border-white/5 p-8 md:p-12 min-w-[300px] md:min-w-[400px]">
                   <div className="flex gap-4 mb-4 flex-wrap">
                     {project.skills.map((skill) => (
@@ -137,13 +136,15 @@ export function Projects() {
             {projects.map((project, index) => (
               <motion.div
                 key={`masonry-${project.id}`}
-                className="break-inside-avoid mb-8 group"
+                className="break-inside-avoid mb-8 group cursor-pointer"
                 initial={{ opacity: 0, y: 30 }}
                 whileInView={{ opacity: 1, y: 0 }}
                 viewport={{ once: true, margin: "-50px" }}
                 transition={{ duration: 0.5, delay: index * 0.1 }}
+                onMouseEnter={() => setHoveredProject(project.id)}
+                onMouseLeave={() => setHoveredProject(null)}
               >
-                <div className="bg-[#0a0a0a] border border-white/5 p-8 group-hover:border-[#b93d27]/30 transition-colors duration-300">
+                <div className="bg-[#0a0a0a] border border-white/5 p-8 group-hover:border-[#b93d27]/50 transition-all duration-300">
                   <div className="flex gap-3 mb-4 flex-wrap">
                     {project.skills.map((skill) => (
                       <span key={skill} className="text-[9px] text-[#b93d27] uppercase tracking-[0.15em]">
@@ -151,7 +152,7 @@ export function Projects() {
                       </span>
                     ))}
                   </div>
-                  <h3 className="text-xl md:text-2xl font-bold text-white mb-3">
+                  <h3 className="text-xl md:text-2xl font-bold text-white mb-3 group-hover:text-[#b93d27] transition-colors">
                     {project.title}
                   </h3>
                   <p className="text-neutral-400 text-sm leading-relaxed">
@@ -162,6 +163,67 @@ export function Projects() {
             ))}
           </div>
         </div>
+
+        {/* Dialog Overlay */}
+        {hoveredProject && (
+          <motion.div
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            exit={{ opacity: 0 }}
+            className="fixed inset-0 z-50 flex items-center justify-center px-12"
+          >
+            <div
+              className="absolute inset-0 bg-black/80 backdrop-blur-sm"
+              onClick={() => setHoveredProject(null)}
+            />
+            <motion.div
+              initial={{ scale: 0.9, opacity: 0 }}
+              animate={{ scale: 1, opacity: 1 }}
+              exit={{ scale: 0.9, opacity: 0 }}
+              className="relative bg-[#0a0a0a] border border-white/10 max-w-3xl w-full p-12"
+            >
+              {(() => {
+                const project = projects.find(p => p.id === hoveredProject);
+                if (!project) return null;
+                return (
+                  <>
+                    <div className="flex gap-4 mb-6 flex-wrap">
+                      {project.skills.map((skill) => (
+                        <span key={skill} className="text-[11px] text-[#b93d27] uppercase tracking-[0.2em] font-medium">
+                          {skill}
+                        </span>
+                      ))}
+                    </div>
+                    <h3 className="text-4xl md:text-5xl font-bold text-white mb-6">
+                      {project.title}
+                    </h3>
+                    <div className="space-y-4 mb-8">
+                      <p className="text-neutral-300 text-lg leading-relaxed">
+                        {project.description}
+                      </p>
+                      {project.blogContent?.map((paragraph, i) => (
+                        <p key={i} className="text-neutral-400 text-base leading-relaxed">
+                          {paragraph}
+                        </p>
+                      ))}
+                    </div>
+                    <div className="flex gap-6">
+                      <a href={project.link} className="text-[11px] font-black tracking-[0.4em] uppercase text-white border-b-2 border-[#b93d27] pb-2 hover:text-[#b93d27] transition-colors">
+                        {project.linkText}
+                      </a>
+                      <button
+                        onClick={() => setHoveredProject(null)}
+                        className="text-[11px] font-black tracking-[0.4em] uppercase text-neutral-500 hover:text-white transition-colors"
+                      >
+                        Close
+                      </button>
+                    </div>
+                  </>
+                );
+              })()}
+            </motion.div>
+          </motion.div>
+        )}
       </section>
 
       {/* ===== VARIANT D: HORIZONTAL CAROUSEL ===== */}
