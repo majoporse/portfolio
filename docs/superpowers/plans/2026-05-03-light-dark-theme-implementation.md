@@ -174,207 +174,174 @@ git commit -m "feat: add ThemeToggle component with sun/moon icons"
 **Files:**
 - Modify: `app/root.tsx`
 
-- [ ] **Step 1: Import ThemeProvider and ThemeToggle**
+**Important:** React Router v7's `Layout` component is exported and used by the framework itself, so we can't wrap it in a React Context Provider. Instead, we'll use a module-level theme store that both Layout (for SSR) and App (for interactivity) can access.
+
+- [ ] **Step 1: Create a module-level theme store**
+
+Create `app/context/themeStore.ts`:
 
 ```tsx
-import { ThemeProvider, useTheme } from './context/ThemeContext';
+type Theme = 'light' | 'dark';
+
+// Module-level theme state (for SSR compatibility)
+let currentTheme: Theme = 'dark';
+const subscribers: Set<(theme: Theme) => void> = new Set();
+
+export function getTheme(): Theme {
+  return currentTheme;
+}
+
+export function setTheme(theme: Theme): void {
+  currentTheme = theme;
+  localStorage.setItem('portfolio-theme', theme);
+  subscribers.forEach((callback) => callback(theme));
+}
+
+export function subscribe(callback: (theme: Theme) => () => void): () => void {
+  subscribers.add(callback);
+  return () => {
+    subscribers.delete(callback);
+  };
+}
+
+export function initializeTheme(): Theme {
+  // Check localStorage first
+  const saved = localStorage.getItem('portfolio-theme');
+  if (saved === 'light' || saved === 'dark') {
+    currentTheme = saved;
+    return saved;
+  }
+
+  // Check system preference
+  if (window.matchMedia('(prefers-color-scheme: light)').matches) {
+    currentTheme = 'light';
+    return 'light';
+  }
+
+  currentTheme = 'dark';
+  return 'dark';
+}
+
+export function toggleTheme(): void {
+  setTheme(currentTheme === 'light' ? 'dark' : 'light');
+}
+```
+
+- [ ] **Step 2: Update ThemeContext to use the store**
+
+Update `app/context/ThemeContext.tsx`:
+
+```tsx
+import { createContext, useContext, useState, useEffect, ReactNode } from 'react';
+import { getTheme, setTheme, toggleTheme as toggleThemeStore, subscribe, initializeTheme } from './themeStore';
+
+type Theme = 'light' | 'dark';
+
+interface ThemeContextType {
+  theme: Theme;
+  setTheme: (theme: Theme) => void;
+  toggleTheme: () => void;
+}
+
+const ThemeContext = createContext<ThemeContextType | undefined>(undefined);
+
+export function useTheme() {
+  const context = useContext(ThemeContext);
+  if (!context) {
+    throw new Error('useTheme must be used within a ThemeProvider');
+  }
+  return context;
+}
+
+interface ThemeProviderProps {
+  children: ReactNode;
+}
+
+export function ThemeProvider({ children }: ThemeProviderProps) {
+  const [theme, setThemeState] = useState<Theme>(getTheme());
+
+  useEffect(() => {
+    // Initialize theme on client
+    const initialTheme = initializeTheme();
+    setThemeState(initialTheme);
+
+    // Subscribe to changes
+    const unsubscribe = subscribe(setThemeState);
+
+    return unsubscribe;
+  }, []);
+
+  const handleSetTheme = (newTheme: Theme) => {
+    setTheme(newTheme);
+    setThemeState(newTheme);
+  };
+
+  const handleToggleTheme = () => {
+    toggleThemeStore();
+    setThemeState((prev) => (prev === 'light' ? 'dark' : 'light'));
+  };
+
+  return (
+    <ThemeContext.Provider value={{ theme, setTheme: handleSetTheme, toggleTheme: handleToggleTheme }}>
+      {children}
+    </ThemeContext.Provider>
+  );
+}
+```
+
+- [ ] **Step 3: Update Layout to use module store for SSR**
+
+Update `app/root.tsx` Layout component:
+
+```tsx
+export function Layout({ children }: { children: React.ReactNode }) {
+  // Read from module store for SSR compatibility
+  // This runs on both server and client
+  const theme = typeof window !== 'undefined' 
+    ? getTheme() 
+    : 'dark'; // Default for SSR
+
+  return (
+    <html lang="en" className={theme}>
+      <head>
+        <meta charSet="utf-8" />
+        <meta name="viewport" content="width=device-width, initial-scale=1" />
+        <Meta />
+        <Links />
+      </head>
+      <body>
+        {children}
+        <ScrollRestoration />
+        <Scripts />
+      </body>
+    </html>
+  );
+}
+```
+
+- [ ] **Step 4: Update App component to wrap with ThemeProvider**
+
+```tsx
+import { ThemeProvider } from './context/ThemeContext';
 import { ThemeToggle } from './components/ThemeToggle';
-```
-
-- [ ] **Step 2: Update App component to wrap with ThemeProvider and add ThemeToggle**
-
-```tsx
-export default function App() {
-  const { theme } = useTheme();
-
-  return (
-    <html lang="en" className={theme}>
-      <body>
-        <ThemeProvider>
-          <WebGLBackground />
-          <Outlet />
-          <ThemeToggle />
-        </ThemeProvider>
-      </body>
-    </html>
-  );
-}
-```
-
-Wait, this won't work because `useTheme` can't be used outside the provider. Let me fix this approach.
-
-- [ ] **Step 2 (Revised): Update App component to use ThemeProvider correctly**
-
-```tsx
-export default function App() {
-  return (
-    <ThemeProvider>
-      <AppContent />
-    </ThemeProvider>
-  );
-}
-
-function AppContent() {
-  const { theme } = useTheme();
-
-  return (
-    <>
-      <WebGLBackground theme={theme} />
-      <Outlet />
-      <ThemeToggle />
-    </>
-  );
-}
-```
-
-- [ ] **Step 3: Update Layout to add theme class to html**
-
-```tsx
-export function Layout({ children }: { children: React.ReactNode }) {
-  const { theme } = useTheme();
-
-  return (
-    <html lang="en" className={theme}>
-      <head>
-        <meta charSet="utf-8" />
-        <meta name="viewport" content="width=device-width, initial-scale=1" />
-        <Meta />
-        <Links />
-      </head>
-      <body>
-        {children}
-        <ScrollRestoration />
-        <Scripts />
-      </body>
-    </html>
-  );
-}
-```
-
-Wait, Layout also needs to be inside the provider. Let me refactor the entire root.tsx structure.
-
-- [ ] **Step 4: Refactor root.tsx completely**
-
-```tsx
-import {
-  isRouteErrorResponse,
-  Links,
-  Meta,
-  Outlet,
-  Scripts,
-  ScrollRestoration,
-} from "react-router";
-
-import type { Route } from "./+types/root";
-import "./app.css";
-import { WebGLBackground } from "./components/WebGLBackground";
-import { ThemeProvider, useTheme } from "./context/ThemeContext";
-import { ThemeToggle } from "./components/ThemeToggle";
-
-export const links: Route.LinksFunction = () => [
-  { rel: "preconnect", href: "https://fonts.googleapis.com" },
-  {
-    rel: "preconnect",
-    href: "https://fonts.gstatic.com",
-    crossOrigin: "anonymous",
-  },
-  {
-    rel: "stylesheet",
-    href: "https://fonts.googleapis.com/css2?family=Inter:ital,opsz,wght@0,14..32,100..900;1,14..32,100..900&family=Playfair+Display:ital,wght@1,900&display=swap",
-  },
-];
-
-export function Layout({ children }: { children: React.ReactNode }) {
-  const { theme } = useTheme();
-
-  return (
-    <html lang="en" className={theme}>
-      <head>
-        <meta charSet="utf-8" />
-        <meta name="viewport" content="width=device-width, initial-scale=1" />
-        <Meta />
-        <Links />
-      </head>
-      <body>
-        {children}
-        <ScrollRestoration />
-        <Scripts />
-      </body>
-    </html>
-  );
-}
+import { WebGLBackground } from './components/WebGLBackground';
 
 export default function App() {
   return (
     <ThemeProvider>
-      <Layout>
-        <WebGLBackground />
-        <Outlet />
-        <ThemeToggle />
-      </Layout>
-    </ThemeProvider>
-  );
-}
-
-export function ErrorBoundary({ error }: Route.ErrorBoundaryProps) {
-  // ... existing error boundary code
-}
-```
-
-Wait, `Layout` needs to be a child of `ThemeProvider` but it's also exported by react-router. This is a common pattern issue. Let me check the correct approach for React Router v7.
-
-Actually, looking at the existing code, `Layout` is exported and used by React Router internally. I need a different approach - wrap the entire App output instead.
-
-- [ ] **Step 5: Use correct React Router v7 Layout pattern**
-
-```tsx
-// Create a ThemeWrapper component that applies theme class
-function ThemeWrapper({ children }: { children: React.ReactNode }) {
-  const { theme } = useTheme();
-
-  return (
-    <html lang="en" className={theme}>
-      <head>
-        <meta charSet="utf-8" />
-        <meta name="viewport" content="width=device-width, initial-scale=1" />
-        <Meta />
-        <Links />
-      </head>
-      <body>
-        {children}
-        <ScrollRestoration />
-        <Scripts />
-      </body>
-    </html>
-  );
-}
-
-export function Layout({ children }: { children: React.ReactNode }) {
-  return (
-    <ThemeProvider>
-      <ThemeWrapper>
-        {children}
-      </ThemeWrapper>
-    </ThemeProvider>
-  );
-}
-
-export default function App() {
-  return (
-    <>
       <WebGLBackground />
       <Outlet />
       <ThemeToggle />
-    </>
+    </ThemeProvider>
   );
 }
 ```
 
-- [ ] **Step 6: Commit the root layout changes**
+- [ ] **Step 5: Commit the root layout changes**
 
 ```bash
-git add app/root.tsx
-git commit -m "feat: integrate ThemeProvider into root layout"
+git add app/context/themeStore.ts app/context/ThemeContext.tsx app/root.tsx
+git commit -m "feat: add theme store and update root layout for React Router v7 compatibility"
 ```
 
 ---
@@ -384,16 +351,13 @@ git commit -m "feat: integrate ThemeProvider into root layout"
 **Files:**
 - Modify: `app/components/WebGLBackground.tsx`
 
-- [ ] **Step 1: Add theme prop to WebGLBackground component**
+- [ ] **Step 1: Import theme store and add theme reactivity**
 
 ```tsx
 import { useEffect, useRef, useState } from "react";
+import { getTheme, subscribe } from '../context/themeStore';
 
-interface WebGLBackgroundProps {
-  theme: 'light' | 'dark';
-}
-
-export function WebGLBackground({ theme }: WebGLBackgroundProps) {
+export function WebGLBackground() {
   const canvasRef = useRef<HTMLCanvasElement>(null);
 
   // Post-processing parameters
@@ -415,13 +379,20 @@ export function WebGLBackground({ theme }: WebGLBackgroundProps) {
     },
   };
 
-  const currentTheme = themeConfig[theme];
+  // Get theme from store and subscribe to changes
+  const [theme, setTheme] = useState(getTheme());
+  
+  useEffect(() => {
+    const unsubscribe = subscribe((newTheme) => {
+      setTheme(newTheme);
+    });
+    return unsubscribe;
+  }, []);
 
-  // ... rest of the component
-}
+  const currentTheme = themeConfig[theme];
 ```
 
-- [ ] **Step 2: Update fragment shader color uniforms and remove debug controls**
+- [ ] **Step 2: Update fragment shader color uniforms**
 
 Update the shader uniform locations to use the currentTheme values:
 
@@ -490,7 +461,7 @@ git commit -m "feat: add theme support to WebGLBackground and remove debug contr
 **Files:**
 - Modify: `app/app.css`
 
-- [ ] **Step 1: Add CSS custom properties for theme colors**
+- [ ] **Step 1: Update CSS for theme-aware styling**
 
 ```css
 @import "tailwindcss";
@@ -506,43 +477,21 @@ git commit -m "feat: add theme support to WebGLBackground and remove debug contr
   --color-text-secondary: #555;
 }
 
-:root {
-  --bg-color: #f5f5f5;
-  --text-primary: #1a1a1a;
-  --text-secondary: #555;
-  --header-bg: rgba(245, 245, 245, 0.8);
-}
-
-html.dark {
-  --bg-color: #050505;
-  --text-primary: #d1d1d1;
-  --text-secondary: #555;
-  --header-bg: rgba(5, 5, 5, 0.8);
-}
-
 html, body {
-  background-color: var(--bg-color);
-  color: var(--text-primary);
   overflow-x: hidden;
   font-family: "Inter", sans-serif;
 }
 
-html.dark, html.dark body {
+/* Dark theme (default) */
+html.dark body {
   background-color: #050505;
   color: #d1d1d1;
 }
 
-html:not(.dark), html:not(.dark) body {
+/* Light theme */
+html.light body {
   background-color: #f5f5f5;
   color: #1a1a1a;
-}
-
-/* For browsers that support color-scheme */
-@media (prefers-color-scheme: dark) {
-  html:not(.dark):not(.light) {
-    background-color: #050505;
-    color: #d1d1d1;
-  }
 }
 ```
 
@@ -550,7 +499,7 @@ html:not(.dark), html:not(.dark) body {
 
 ```bash
 git add app/app.css
-git commit -m "feat: add CSS variables for theme colors"
+git commit -m "feat: add theme-aware CSS styling"
 ```
 
 ---
@@ -560,14 +509,22 @@ git commit -m "feat: add CSS variables for theme colors"
 **Files:**
 - Modify: `app/components/Header.tsx`
 
-- [ ] **Step 1: Add theme context to Header and update styles**
+- [ ] **Step 1: Add theme reactivity to Header**
 
 ```tsx
 import { motion } from "framer-motion";
-import { useTheme } from '../context/ThemeContext';
+import { useEffect, useState } from 'react';
+import { getTheme, subscribe } from '../context/themeStore';
 
 export function Header() {
-  const { theme } = useTheme();
+  const [theme, setTheme] = useState(getTheme());
+
+  useEffect(() => {
+    const unsubscribe = subscribe((newTheme) => {
+      setTheme(newTheme);
+    });
+    return unsubscribe;
+  }, []);
 
   const headerBg = theme === 'dark' 
     ? 'rgba(5, 5, 5, 0.8)' 
