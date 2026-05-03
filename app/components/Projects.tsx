@@ -1,6 +1,6 @@
-import { motion, useDragControls, useMotionValue, useSpring } from "framer-motion";
+import { motion, useDragControls, useMotionValue, useSpring, useTransform } from "framer-motion";
 import { projects } from "../constants/projects";
-import { useState } from "react";
+import { useState, useRef, useEffect } from "react";
 
 export function Projects() {
   const [activeIndex, setActiveIndex] = useState(0);
@@ -11,6 +11,11 @@ export function Projects() {
   const canvasY = useMotionValue(0);
   const springX = useSpring(canvasX, { stiffness: 100, damping: 20 });
   const springY = useSpring(canvasY, { stiffness: 100, damping: 20 });
+  
+  // Carousel state for Variant E
+  const carouselDragX = useMotionValue(0);
+  const containerRef = useRef<HTMLDivElement>(null);
+  const totalWidth = projects.length * 288; // 256px card + 32px gap
 
   return (
     <div id="work">
@@ -304,39 +309,61 @@ export function Projects() {
           </h2>
         </div>
 
-        {/* Thumbnail Strip */}
-        <div className="flex-1 flex items-center justify-center py-12 px-12">
-          <div className="flex gap-12 items-center overflow-x-auto px-12 py-12">
-            {projects.map((project, index) => (
-              <motion.div
-                key={`gallery-${project.id}`}
-                className={`cursor-pointer flex-shrink-0 transition-all duration-300 ${
-                  index === activeIndex ? 'scale-115 z-10' : 'scale-90 opacity-40 hover:scale-100 hover:opacity-70'
-                }`}
-                onClick={() => setActiveIndex(index)}
-                whileHover={{ scale: index === activeIndex ? 1.15 : 1.08 }}
-              >
-                <div
-                  className={`w-56 h-56 md:w-72 md:h-72 bg-[#0a0a0a] border-2 transition-all duration-300 flex flex-col justify-end p-6 relative overflow-hidden ${
-                    index === activeIndex ? 'border-[#b93d27]' : 'border-white/10'
+        {/* Carousel Strip */}
+        <div className="flex-1 flex items-center justify-center py-12">
+          <div 
+            ref={containerRef}
+            className="flex gap-8 items-center px-12"
+          >
+            {projects.map((project, index) => {
+              const isSelected = index === activeIndex;
+              return (
+                <motion.div
+                  key={`gallery-${project.id}`}
+                  className={`cursor-pointer flex-shrink-0 transition-all duration-300 ${
+                    isSelected ? 'scale-115 z-10' : 'scale-90 opacity-40 hover:scale-100 hover:opacity-70'
                   }`}
+                  onClick={() => setActiveIndex(index)}
+                  whileHover={{ scale: isSelected ? 1.15 : 1.08 }}
                 >
-                  {/* Square card visual */}
-                  <div className="absolute inset-0 bg-gradient-to-t from-black/80 to-transparent" />
-                  <div className="relative z-10">
-                    <h4 className="text-xl md:text-2xl font-bold text-white mb-1 truncate">
-                      {project.title}
-                    </h4>
-                    <div className="flex gap-2 flex-wrap mb-2">
-                      {project.skills.slice(0, 2).map((skill) => (
-                        <span key={skill} className="text-[9px] text-[#b93d27] uppercase tracking-wider">
-                          {skill}
-                        </span>
-                      ))}
+                  <div
+                    className={`w-56 h-56 md:w-72 md:h-72 bg-[#0a0a0a] border-2 transition-all duration-300 flex flex-col justify-end p-6 relative overflow-hidden ${
+                      isSelected ? 'border-[#b93d27]' : 'border-white/10'
+                    }`}
+                  >
+                    <div className="absolute inset-0 bg-gradient-to-t from-black/80 to-transparent" />
+                    <div className="relative z-10">
+                      <h4 className="text-xl md:text-2xl font-bold text-white mb-1 truncate">
+                        {project.title}
+                      </h4>
+                      <div className="flex gap-2 flex-wrap mb-2">
+                        {project.skills.slice(0, 2).map((skill) => (
+                          <span key={skill} className="text-[9px] text-[#b93d27] uppercase tracking-wider">
+                            {skill}
+                          </span>
+                        ))}
+                      </div>
                     </div>
                   </div>
-                </div>
-              </motion.div>
+                </motion.div>
+              );
+            })}
+          </div>
+        </div>
+
+        {/* Minimap Navigation */}
+        <div className="flex justify-center py-6 px-12">
+          <div className="flex gap-2">
+            {projects.map((project, index) => (
+              <button
+                key={index}
+                onClick={() => setActiveIndex(index)}
+                className={`transition-all duration-200 ${
+                  index === activeIndex 
+                    ? 'w-12 h-3 bg-[#b93d27]' 
+                    : 'w-3 h-3 bg-white/30 hover:bg-white/50'
+                }`}
+              />
             ))}
           </div>
         </div>
