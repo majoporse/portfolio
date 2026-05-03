@@ -32,10 +32,10 @@ export function WebGLBackground() {
   const themeRef = useRef(currentTheme);
   themeRef.current = currentTheme;
 
-  // Scroll-based contrast adjustment
-  const [scrollContrast, setScrollContrast] = useState(0);
-  const [scrollScale, setScrollScale] = useState(0);
-  const [speedScroll, setSpeedScroll] = useState(0);
+  // Scroll-based contrast adjustment using refs for render function access
+  const scrollContrastRef = useRef(0);
+  const scrollScaleRef = useRef(0);
+  const speedScrollRef = useRef(0);
 
   // Calculate scroll-based values
   useEffect(() => {
@@ -46,13 +46,13 @@ export function WebGLBackground() {
       const scrollPercent = docHeight > 0 ? scrollTop / docHeight : 0;
 
       const scrollContrastValue = scrollPercent * 500; // 0 to 500
-      setScrollContrast(scrollContrastValue);
+      scrollContrastRef.current = scrollContrastValue;
 
       const scrollScaleValue = scrollPercent * 0.0; // 0 to 0 (no scale change)
-      setScrollScale(scrollScaleValue);
+      scrollScaleRef.current = scrollScaleValue;
 
       const speedScrollValue = scrollPercent * -0.017;
-      setSpeedScroll(speedScrollValue);
+      speedScrollRef.current = speedScrollValue;
     };
 
     window.addEventListener("scroll", handleScroll);
@@ -274,9 +274,9 @@ export function WebGLBackground() {
       const offsetY = -2;
 
       // Combine base values with scroll-based adjustments
-      const frequency = baseFrequency + scrollScale;
-      const contrast = baseContrast + scrollContrast;
-      const speed = baseSpeed + speedScroll;
+      const frequency = baseFrequency + scrollScaleRef.current;
+      const contrast = baseContrast + scrollContrastRef.current;
+      const speed = baseSpeed + speedScrollRef.current;
 
       accumulatedTime += deltaTime * 0.001 * speed;
 
