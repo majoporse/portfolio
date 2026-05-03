@@ -35,19 +35,7 @@ export function Projects() {
                 viewport={{ once: true, margin: "-100px" }}
                 transition={{ duration: 0.8, delay: index * 0.1 }}
               >
-                <div
-                  className="absolute -top-12 left-0 w-full"
-                  style={{ fontSize: "20vw", fontWeight: 900, color: "rgba(255,255,255,0.01)", whiteSpace: "nowrap", zIndex: 0 }}
-                >
-                  <motion.div
-                    initial={{ scale: 1 }}
-                    whileHover={{ scale: 1.15 }}
-                    transition={{ duration: 0.5 }}
-                    className="origin-left"
-                  >
-                    {project.backgroundLabel}
-                  </motion.div>
-                </div>
+
 
                 <div className="relative z-10 pt-24">
                   <div className="flex gap-6 mb-8 flex-wrap">
@@ -111,10 +99,7 @@ export function Projects() {
               animate={{ opacity: 1, scale: 1 }}
               transition={{ duration: 0.6, delay: index * 0.15 }}
             >
-              <div className="relative group cursor-pointer">
-                <div className="absolute -top-8 -left-8 opacity-[0.03]" style={{ fontSize: "15vw", fontWeight: 900, whiteSpace: "nowrap" }}>
-                  {project.backgroundLabel}
-                </div>
+                <div className="relative group cursor-pointer">
                 <div className="relative bg-[#0a0a0a] border border-white/5 p-8 md:p-12 min-w-[300px] md:min-w-[400px]">
                   <div className="flex gap-4 mb-4 flex-wrap">
                     {project.skills.map((skill) => (
@@ -159,9 +144,6 @@ export function Projects() {
                 transition={{ duration: 0.5, delay: index * 0.1 }}
               >
                 <div className="bg-[#0a0a0a] border border-white/5 p-8 group-hover:border-[#b93d27]/30 transition-colors duration-300">
-                  <div className="text-[8vw] font-black text-white/3 mb-6 leading-none" style={{ color: "rgba(255,255,255,0.03)" }}>
-                    {project.backgroundLabel}
-                  </div>
                   <div className="flex gap-3 mb-4 flex-wrap">
                     {project.skills.map((skill) => (
                       <span key={skill} className="text-[9px] text-[#b93d27] uppercase tracking-[0.15em]">
@@ -214,9 +196,6 @@ export function Projects() {
           {projects.map((project, index) => (
             <div key={`carousel-${project.id}`} className="min-w-full h-screen flex items-center justify-center px-12 md:px-24">
               <div className="max-w-4xl text-center">
-                <div className="text-[15vw] font-black text-white/5 mb-8 leading-none" style={{ color: "rgba(255,255,255,0.02)" }}>
-                  {project.backgroundLabel}
-                </div>
                 <div className="flex gap-4 mb-6 justify-center flex-wrap">
                   {project.skills.map((skill) => (
                     <span key={skill} className="text-[11px] text-[#b93d27] uppercase tracking-[0.2em]">
