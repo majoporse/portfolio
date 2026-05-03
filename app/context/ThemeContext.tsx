@@ -1,9 +1,9 @@
 import { createContext, useContext, useState, useEffect, ReactNode } from 'react';
 import { getTheme, setTheme, toggleTheme as toggleThemeStore, subscribe, initializeTheme } from './themeStore';
 
-type Theme = 'light' | 'dark';
+export type Theme = 'light' | 'dark';
 
-interface ThemeContextType {
+export interface ThemeContextType {
   theme: Theme;
   setTheme: (theme: Theme) => void;
   toggleTheme: () => void;
@@ -24,7 +24,7 @@ interface ThemeProviderProps {
 }
 
 export function ThemeProvider({ children }: ThemeProviderProps) {
-  const [theme, setThemeState] = useState<Theme>(getTheme());
+  const [theme, setThemeState] = useState<Theme>('light');
 
   useEffect(() => {
     // Initialize theme on client
@@ -42,13 +42,8 @@ export function ThemeProvider({ children }: ThemeProviderProps) {
     setThemeState(newTheme);
   };
 
-  const handleToggleTheme = () => {
-    toggleThemeStore();
-    setThemeState((prev) => (prev === 'light' ? 'dark' : 'light'));
-  };
-
   return (
-    <ThemeContext.Provider value={{ theme, setTheme: handleSetTheme, toggleTheme: handleToggleTheme }}>
+    <ThemeContext.Provider value={{ theme, setTheme: handleSetTheme, toggleTheme }}>
       {children}
     </ThemeContext.Provider>
   );

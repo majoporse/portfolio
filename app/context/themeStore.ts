@@ -26,16 +26,19 @@ export function initializeTheme(): Theme {
   const saved = localStorage.getItem('portfolio-theme');
   if (saved === 'light' || saved === 'dark') {
     currentTheme = saved;
+    subscribers.forEach((callback) => callback(saved));
     return saved;
   }
 
   // Check system preference
   if (window.matchMedia('(prefers-color-scheme: light)').matches) {
     currentTheme = 'light';
+    subscribers.forEach((callback) => callback('light'));
     return 'light';
   }
 
   currentTheme = 'dark';
+  subscribers.forEach((callback) => callback('dark'));
   return 'dark';
 }
 
