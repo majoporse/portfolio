@@ -1,3 +1,4 @@
+import { useRef } from "react";
 import { motion } from "framer-motion";
 import { useInView } from "framer-motion";
 
@@ -30,14 +31,15 @@ export function Experience() {
           {experiences.map((exp, index) => (
             <ExperienceItem key={index} {...exp} />
           ))}
-        </div>
+    </div>
       </div>
     </section>
   );
 }
 
 function ExperienceItem({ year, title, role }: { year: string; title: string; role: string }) {
-  const { ref, inView } = useInView({ threshold: 0.1, triggerOnce: true });
+  const ref = useRef(null);
+  const inView = useInView(ref, { amount: 0.1, once: true });
 
   return (
     <motion.div
