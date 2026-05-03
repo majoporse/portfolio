@@ -31,6 +31,7 @@ export function Projects() {
   const textColor = theme === 'dark' ? 'text-white' : 'text-black';
   const textMutedColor = theme === 'dark' ? 'text-neutral-400' : 'text-neutral-600';
   const borderStyle = theme === 'dark' ? 'border-white/10' : 'border-black/10';
+  const borderSubtleStyle = theme === 'dark' ? 'border-white/5' : 'border-black/5';
 
   return (
     <div id="work">
@@ -142,11 +143,11 @@ export function Projects() {
       {/* ===== VARIANT C: MASONRY GRID ===== */}
       <section className="py-32 px-12 md:px-24 relative ">
         <div className="max-w-[1800px] mx-auto">
-          <div className="mb-12 pb-6 border-b border-white/10">
+          <div className={`mb-12 pb-6 border-b ${borderStyle}`}>
             <p className="text-[10px] uppercase tracking-[0.8em] text-[#b93d27] mb-2 font-bold">
               Variant C
             </p>
-            <h2 className="text-6xl md:text-8xl font-black tracking-tighter text-white italic">
+            <h2 className={`text-6xl md:text-8xl font-black tracking-tighter ${textColor} italic`}>
               Masonry Grid
             </h2>
           </div>
@@ -163,7 +164,7 @@ export function Projects() {
                 onMouseEnter={() => setHoveredProject(project.id)}
                 onMouseLeave={() => setHoveredProject(null)}
               >
-                <div className=" border border-white/5 p-8 group-hover:border-[#b93d27]/50 transition-all duration-300">
+                <div className={` border ${borderSubtleStyle} p-8 group-hover:border-[#b93d27]/50 transition-all duration-300`}>
                   <div className="flex gap-3 mb-4 flex-wrap">
                     {project.skills.map((skill) => (
                       <span key={skill} className="text-[9px] text-[#b93d27] uppercase tracking-[0.15em]">
@@ -171,10 +172,10 @@ export function Projects() {
                       </span>
                     ))}
                   </div>
-                  <h3 className="text-xl md:text-2xl font-bold text-white mb-3 group-hover:text-[#b93d27] transition-colors">
+                  <h3 className={`text-xl md:text-2xl font-bold ${textColor} mb-3 group-hover:text-[#b93d27] transition-colors`}>
                     {project.title}
                   </h3>
-                  <p className="text-neutral-400 text-sm leading-relaxed">
+                  <p className={`${textMutedColor} text-sm leading-relaxed`}>
                     {project.description}
                   </p>
                 </div>
@@ -199,7 +200,7 @@ export function Projects() {
               initial={{ scale: 0.9, opacity: 0 }}
               animate={{ scale: 1, opacity: 1 }}
               exit={{ scale: 0.9, opacity: 0 }}
-              className="relative  border border-white/10 max-w-3xl w-full p-12"
+              className={`relative  border ${borderStyle} max-w-3xl w-full p-12`}
             >
               {(() => {
                 const project = projects.find(p => p.id === hoveredProject);
@@ -213,26 +214,26 @@ export function Projects() {
                         </span>
                       ))}
                     </div>
-                    <h3 className="text-4xl md:text-5xl font-bold text-white mb-6">
+                    <h3 className={`text-4xl md:text-5xl font-bold ${textColor} mb-6`}>
                       {project.title}
                     </h3>
                     <div className="space-y-4 mb-8">
-                      <p className="text-neutral-300 text-lg leading-relaxed">
+                        <p className={`${textMutedColor} text-lg leading-relaxed`}>
                         {project.description}
                       </p>
                       {project.blogContent?.map((paragraph, i) => (
-                        <p key={i} className="text-neutral-400 text-base leading-relaxed">
+                        <p key={i} className={`${textMutedColor} text-base leading-relaxed`}>
                           {paragraph}
                         </p>
                       ))}
                     </div>
                     <div className="flex gap-6">
-                      <a href={project.link} className="text-[11px] font-black tracking-[0.4em] uppercase text-white border-b-2 border-[#b93d27] pb-2 hover:text-[#b93d27] transition-colors">
+                        <a href={project.link} className={`text-[11px] font-black tracking-[0.4em] uppercase ${textColor} border-b-2 border-[#b93d27] pb-2 hover:text-[#b93d27] transition-colors`}>
                         {project.linkText}
                       </a>
-                      <button
+                        <button
                         onClick={() => setHoveredProject(null)}
-                        className="text-[11px] font-black tracking-[0.4em] uppercase text-neutral-500 hover:text-white transition-colors"
+                        className={`text-[11px] font-black tracking-[0.4em] uppercase ${textMutedColor} hover:${textColor} transition-colors`}
                       >
                         Close
                       </button>
@@ -253,7 +254,7 @@ export function Projects() {
           </p>
         </div>
         <div className="absolute top-6 left-1/2 -translate-x-1/2 z-50">
-          <h2 className="text-6xl md:text-8xl font-black tracking-tighter text-white italic">
+          <h2 className={`text-6xl md:text-8xl font-black tracking-tighter ${textColor} italic`}>
             Horizontal Carousel
           </h2>
         </div>
@@ -284,13 +285,13 @@ export function Projects() {
                     </span>
                   ))}
                 </div>
-                <h3 className="text-5xl md:text-7xl font-bold text-white mb-6">
+                <h3 className={`text-5xl md:text-7xl font-bold ${textColor} mb-6`}>
                   {project.title}
                 </h3>
-                <p className="text-neutral-300 text-xl leading-relaxed max-w-2xl mx-auto mb-8">
+                <p className={`${textMutedColor} text-xl leading-relaxed max-w-2xl mx-auto mb-8`}>
                   {project.description}
                 </p>
-                <a href={project.link} className="inline-block text-[11px] font-black tracking-[0.4em] uppercase text-white border-b-2 border-[#b93d27] pb-2 hover:text-[#b93d27] transition-colors">
+                <a href={project.link} className={`inline-block text-[11px] font-black tracking-[0.4em] uppercase ${textColor} border-b-2 border-[#b93d27] pb-2 hover:text-[#b93d27] transition-colors`}>
                   {project.linkText}
                 </a>
               </div>
@@ -306,7 +307,7 @@ export function Projects() {
                 setActiveIndex(index);
                 dragX.set(-index * (typeof window !== 'undefined' ? window.innerWidth : 1024));
               }}
-              className={`w-2 h-2 rounded-full transition-all ${index === activeIndex ? 'bg-[#b93d27] w-8' : 'bg-white/30'}`}
+              className={`w-2 h-2 rounded-full transition-all ${index === activeIndex ? 'bg-[#b93d27] w-8' : `bg-${theme === 'dark' ? 'white' : 'black'}/30`}`}
             />
           ))}
         </div>
@@ -314,11 +315,11 @@ export function Projects() {
 
       {/* ===== VARIANT E: THUMBNAIL GALLERY ===== */}
       <section className="min-h-screen relative  flex flex-col">
-        <div className="py-12 px-12 md:px-24 border-b border-white/10">
+        <div className={`py-12 px-12 md:px-24 border-b ${borderStyle}`}>
           <p className="text-[10px] uppercase tracking-[0.8em] text-[#b93d27] mb-2 font-bold">
             Variant E
           </p>
-          <h2 className="text-6xl md:text-8xl font-black tracking-tighter text-white italic">
+          <h2 className={`text-6xl md:text-8xl font-black tracking-tighter ${textColor} italic`}>
             Thumbnail Gallery
           </h2>
         </div>
@@ -351,12 +352,12 @@ export function Projects() {
                 >
                   <div
                     className={`w-56 h-56 md:w-72 md:h-72  border-2 transition-all duration-300 flex flex-col justify-end p-6 relative overflow-hidden ${
-                      isSelected ? 'border-[#b93d27]' : 'border-white/10'
+                      isSelected ? 'border-[#b93d27]' : borderStyle
                     }`}
                   >
                     <div className="absolute inset-0 bg-gradient-to-t from-black/80 to-transparent" />
                     <div className="relative z-10">
-                      <h4 className="text-xl md:text-2xl font-bold text-white mb-1 truncate">
+                      <h4 className={`text-xl md:text-2xl font-bold ${textColor} mb-1 truncate`}>
                         {project.title}
                       </h4>
                       <div className="flex gap-2 flex-wrap mb-2">
@@ -384,7 +385,7 @@ export function Projects() {
                 className={`transition-all duration-200 ${
                   index === activeIndex 
                     ? 'w-12 h-3 bg-[#b93d27]' 
-                    : 'w-3 h-3 bg-white/30 hover:bg-white/50'
+                    : `w-3 h-3 bg-${theme === 'dark' ? 'white' : 'black'}/30 hover:bg-${theme === 'dark' ? 'white' : 'black'}/50`
                 }`}
               />
             ))}
@@ -399,7 +400,7 @@ export function Projects() {
               initial={{ opacity: 0, y: 20 }}
               animate={{ opacity: 1, y: 0 }}
               transition={{ duration: 0.3 }}
-              className=" border border-white/10 p-8 md:p-12"
+              className={` border ${borderStyle} p-8 md:p-12`}
             >
               <div className="flex gap-4 mb-6 flex-wrap">
                 {projects[activeIndex].skills.map((skill) => (
@@ -408,21 +409,21 @@ export function Projects() {
                   </span>
                 ))}
               </div>
-              <h3 className="text-3xl md:text-5xl font-bold text-white mb-4">
+                <h3 className={`text-3xl md:text-5xl font-bold ${textColor} mb-4`}>
                 {projects[activeIndex].title}
               </h3>
-              <p className="text-neutral-300 text-lg leading-relaxed mb-6">
+                <p className={`${textMutedColor} text-lg leading-relaxed mb-6`}>
                 {projects[activeIndex].description}
               </p>
-              {projects[activeIndex].blogContent?.map((paragraph, i) => (
-                <p key={i} className="text-neutral-400 text-base leading-relaxed mb-4">
+                {projects[activeIndex].blogContent?.map((paragraph, i) => (
+                  <p key={i} className={`${textMutedColor} text-base leading-relaxed mb-4`}>
                   {paragraph}
                 </p>
               ))}
-              <a
-                href={projects[activeIndex].link}
-                className="inline-block mt-4 text-[11px] font-black tracking-[0.4em] uppercase text-white border-b-2 border-[#b93d27] pb-2 hover:text-[#b93d27] transition-colors"
-              >
+                <a
+                  href={projects[activeIndex].link}
+                  className={`inline-block mt-4 text-[11px] font-black tracking-[0.4em] uppercase ${textColor} border-b-2 border-[#b93d27] pb-2 hover:text-[#b93d27] transition-colors`}
+                >
                 {projects[activeIndex].linkText}
               </a>
             </motion.div>
