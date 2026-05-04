@@ -86,43 +86,43 @@ export function About() {
         <SectionHeader subtitle="This is" title="Me" />
 
         <div className="theme-bg-primary px-6 py-24 ">
-          <div className="max-w-6xl mx-auto grid grid-cols-1 md:grid-cols-[300px_1fr_200px] gap-12 md:gap-16 items-start">
+          <div className="max-w-7xl mx-auto grid grid-cols-1 md:grid-cols-[300px_1fr_300px] gap-12 md:gap-16 items-center">
 
             {/* Photo */}
-            <div className="w-full aspect-square theme-bg-card theme-border-subtle border flex items-center justify-center">
+            <div className="aspect-square theme-bg-card theme-border-accent border flex items-center justify-center">
               <img
-                src={theme == 'dark' ? "images/image2.png" : "images/headshot.jpg"}
+                src={theme == 'dark' ? "images/headshot-dark.jpg" : "images/headshot.jpg"}
                 alt="Profile"
                 className="w-full h-full object-cover"
               />
             </div>
 
             {/* Text */}
-            <div className="flex flex-col justify-center md:min-w-[300px]">
-              <p className="text-lg tracking-wider theme-text-muted leading-relaxed mb-4 max-w-xl">
+            <div className="flex flex-col  justify-center md:min-w-[400px]">
+              <p className="text-lg tracking-wider theme-text-muted leading-relaxed mb-3">
                 I'm Mário, a full-stack developer based in Slovakia, currently
                 studying in Brno.
               </p>
-              <p className="text-lg tracking-wider theme-text-muted leading-relaxed mb-4 max-w-xl">
+              <p className="text-lg tracking-wider theme-text-muted leading-relaxed mb-3">
                 I've grown to love building things with C#, Python, and Rust,
                 and I enjoy designing projects with clean, scalable architecture.
               </p>
-              <p className="text-lg tracking-wider theme-text-muted leading-relaxed mb-4 max-w-xl">
+              <p className="text-lg tracking-wider theme-text-muted leading-relaxed mb-3">
                 When I'm not coding, I'm probably doing some sports, gaming, or
                 watching something from my IMDB watchlist.
               </p>
-              <p className="text-lg tracking-wider theme-text-muted leading-relaxed mb-4 max-w-xl">
+              <p className="text-lg tracking-wider theme-text-muted leading-relaxed mb-3">
                 I love getting better at what I do. I'm always hunting for new
                 perspectives, tools, and tricks.</p>
             </div>
 
             {/* Facts ticker — CSS marquee */}
-            <div className="flex flex-col w-100">
+            <div className="flex flex-col w-100 h-[300px]">
               <span className="text-[10px] uppercase tracking-[0.8em] theme-text-muted font-bold mb-6">
                 I like
               </span>
               <div
-                className="overflow-hidden h-[300px] cursor-grab active:cursor-grabbing"
+                className="overflow-hidden cursor-grab active:cursor-grabbing"
                 onMouseDown={() => setPaused(true)}
                 onMouseUp={() => setPaused(false)}
                 onMouseLeave={() => setPaused(false)}
