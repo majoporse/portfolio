@@ -1,18 +1,12 @@
 apiVersion: apps/v1
 kind: Deployment
 metadata:
-  name: {{ include "portfolio.fullname" . }}
-  labels:
-    app.kubernetes.io/name: {{ include "portfolio.name" . }}
-    app.kubernetes.io/instance: {{ .Release.Name }}
-    app.kubernetes.io/version: {{ .Chart.AppVersion | quote }}
-    app.kubernetes.io/managed-by: {{ .Release.Service }}
+  name: {{ .Release.Name }}-portfolio
 spec:
   replicas: {{ .Values.replicaCount }}
   selector:
     matchLabels:
-      app.kubernetes.io/name: {{ include "portfolio.name" . }}
-      app.kubernetes.io/instance: {{ .Release.Name }}
+      app: portfolio
   strategy:
     type: RollingUpdate
     rollingUpdate:
@@ -21,14 +15,11 @@ spec:
   template:
     metadata:
       labels:
-        app.kubernetes.io/name: {{ include "portfolio.name" . }}
-        app.kubernetes.io/instance: {{ .Release.Name }}
-        app.kubernetes.io/version: {{ .Chart.AppVersion | quote }}
-        app.kubernetes.io/managed-by: {{ .Release.Service }}
+        app: portfolio
     spec:
       {{- if .Values.registry.username }}
       imagePullSecrets:
-        - name: {{ include "portfolio.fullname" . }}-registry
+        - name: {{ .Release.Name }}-registry
       {{- end }}
       containers:
         - name: portfolio
