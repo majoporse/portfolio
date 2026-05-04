@@ -1,7 +1,8 @@
 FROM node:20-alpine AS development-dependencies-env
-COPY . /app
+COPY ./package.json package-lock.json /app/
 WORKDIR /app
 RUN npm ci
+COPY . /app/
 
 FROM node:20-alpine AS production-dependencies-env
 COPY ./package.json package-lock.json /app/
@@ -15,8 +16,25 @@ WORKDIR /app
 RUN npm run build
 
 FROM node:20-alpine
+ENV NODE_ENV=production
+ENV PORT=3000
+
+RUN apk add --no-cache wget
+
 COPY ./package.json package-lock.json /app/
 COPY --from=production-dependencies-env /app/node_modules /app/node_modules
 COPY --from=build-env /app/build /app/build
 WORKDIR /app
+
+RUN addgroup -g 1001 -S nodejs && \
+    adduser -S nodejs -u 1001 && \
+    chown -R nodejs:nodejs /app
+
+USER nodejs
+
+EXPOSE 3000
+
+HEALTHCHECK --interval=30s --timeout=3s --start-period=10s --retries=3 \
+    CMD wget --no-verbose --tries=1 --spider http://localhost:3000/ || exit 1
+
 CMD ["npm", "run", "start"]
