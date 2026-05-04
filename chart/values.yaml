@@ -7,8 +7,7 @@ image:
 
 registry:
   username: "admin"
-  password: ""
-  email: ""
+  password: "LokojeGoat11"
 
 containerPort: 3000
 
