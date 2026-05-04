@@ -2,6 +2,7 @@ import { motion, useMotionValue } from "framer-motion";
 import { projects } from "../constants/projects";
 import { useRef, useState, useEffect } from 'react';
 import { SectionHeader } from "./SectionHeader";
+import { Link } from "react-router";
 
 export function Projects() {
   const dragX = useMotionValue(0);
@@ -43,26 +44,32 @@ export function Projects() {
             dragElastic={0.05}
           >
             {projects.map((project) => (
-              <div key={project.id} className="flex-shrink-0 w-[400px] md:w-[500px]">
-                <div className="theme-border-medium rounded-2xl py-5 h-full flex flex-col">
-                  <div className="flex gap-3 mb-4 flex-wrap">
+              <Link
+                key={project.id}
+                to={`/projects/${project.id}`}
+                className="flex-shrink-0 w-[400px] md:w-[500px] block"
+              >
+                <div className="theme-border-medium rounded-2xl py-5 h-full flex flex-col hover:shadow-lg transition-shadow duration-300">
+                  <div className="flex gap-3 mb-4 flex-wrap px-5">
                     {project.skills.map((skill) => (
                       <span key={skill} className="text-[10px] theme-text-accent uppercase tracking-[0.15em]">
                         {skill}
                       </span>
                     ))}
                   </div>
-                  <h3 className={`text-3xl md:text-4xl font-bold theme-text-primary mb-4`}>
+                  <h3 className={`text-3xl md:text-4xl font-bold theme-text-primary mb-4 px-5`}>
                     {project.title}
                   </h3>
-                  <p className={`theme-text-muted text-base leading-relaxed mb-6 flex-grow`}>
+                  <p className={`theme-text-muted text-base leading-relaxed mb-6 flex-grow px-5`}>
                     {project.description}
                   </p>
-                  <a href={project.link} className={`inline-block text-[10px] font-black tracking-[0.4em] uppercase theme-text-primary border-b-2 theme-border-accent pb-1 theme-hover-text-accent transition-colors`}>
-                    {project.linkText}
-                  </a>
+                  <div className="px-5">
+                    <span className={`inline-block text-[10px] font-black tracking-[0.4em] uppercase theme-text-primary border-b-2 theme-border-accent pb-1 theme-hover-text-accent transition-colors`}>
+                      View Project →
+                    </span>
+                  </div>
                 </div>
-              </div>
+              </Link>
             ))}
           </motion.div>
         </div>
