@@ -1,0 +1,28 @@
+replicaCount: 1
+
+image:
+  repository: portfolio
+  tag: latest
+  pullPolicy: IfNotPresent
+
+containerPort: 3000
+
+service:
+  port: 80
+
+ingress:
+  enabled: true
+  className: traefik
+  annotations:
+    cert-manager.io/cluster-issuer: letsencrypt-prod
+  host: portfolio.hatal.cc
+  tls:
+    secretName: portfolio-tls
+
+resources:
+  requests:
+    cpu: 128m
+    memory: 128Mi
+  limits:
+    cpu: 256m
+    memory: 256Mi
