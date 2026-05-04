@@ -8,7 +8,9 @@ image:
 containerPort: 3000
 
 service:
+  type: ClusterIP
   port: 80
+  targetPort: 3000
 
 ingress:
   enabled: true
@@ -22,7 +24,7 @@ ingress:
 resources:
   requests:
     cpu: 128m
-    memory: 128Mi
+    memory: 256Mi
   limits:
     cpu: 256m
-    memory: 256Mi
+    memory: 512Mi
