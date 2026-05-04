@@ -6,7 +6,7 @@ interface SectionHeaderProps {
 
 export function SectionHeader({ subtitle, title, accentTitle = false }: SectionHeaderProps) {
   return (
-    <div className="px-12 md:px-24 pt-24 pb-8">
+    <div className="px-2 md:px-24 pt-24 pb-8">
       <div className="inline-block theme-bg-card px-8 py-6">
         <p className="text-[10px] uppercase tracking-[0.8em] theme-text-muted mb-4 font-bold">
           {subtitle}

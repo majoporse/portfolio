@@ -3,7 +3,7 @@ replicaCount: 1
 image:
   repository: registry.hatal.cc/portfolio/frontend
   tag: latest
-  pullPolicy: IfNotPresent
+  pullPolicy: Always
 
 registry:
   username: "admin"

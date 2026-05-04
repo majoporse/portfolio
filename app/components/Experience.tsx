@@ -3,14 +3,15 @@ import { motion, useInView } from "framer-motion";
 import { SectionHeader } from "./SectionHeader";
 
 const experiences = [
-  { year: "2025", title: "RationAl", subtitle: "Pipeline Maintainer", description: "Maintaining and improving CI/CD pipelines for reliable software delivery." },
+  { year: "2026 (current)", title: "Union", subtitle: "Intern software engineer", description: "AI automation of internal tools and processes." },
+  { year: "2025", title: "RationAI", subtitle: "Pipeline Maintainer", description: "Maintaining and improving CI/CD pipelines for reliable software delivery." },
   { year: "2025", title: "PuxDesign", subtitle: "Full-stack Developer", description: "Building modern web applications with focus on performance and design." },
   { year: "2024", title: "Tricentis", subtitle: "QA Automation", description: "Developed automated test frameworks ensuring software quality." },
 ];
 
 const education = [
-  { year: "2024–Present", title: "MSc in Software Engineering", subtitle: "Masaryk University, Brno", description: "Microservices, distributed systems, and advanced architecture." },
-  { year: "2021–2024", title: "BSc in Informatics", subtitle: "Masaryk University, Brno", description: "Foundational knowledge in C, C++, and Java." },
+  { year: "2024-Present", title: "MSc in Software Engineering", subtitle: "Masaryk University, Brno", description: "Microservices, distributed systems, and advanced architecture." },
+  { year: "2021-2024", title: "BSc in Informatics", subtitle: "Masaryk University, Brno", description: "Foundational knowledge in C, C++, and Java." },
 ];
 
 export function Experience() {

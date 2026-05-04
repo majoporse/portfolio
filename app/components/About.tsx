@@ -1,5 +1,6 @@
 import { useState, useMemo } from "react";
 import { SectionHeader } from "./SectionHeader";
+import { useTheme } from "~/context/ThemeContext";
 
 const facts = [
   "Path of Exile",
@@ -77,22 +78,27 @@ export function About() {
   const [paused, setPaused] = useState(false);
   const shuffled = useMemo(() => shuffle(facts), []);
   const doubled = [...shuffled, ...shuffled];
+  const {theme, setTheme} = useTheme();
 
   return (
     <div id="about">
       <section className="relative overflow-hidden">
         <SectionHeader subtitle="This is" title="Me" />
 
-        <div className="theme-bg-primary px-6 md:px-24 py-24">
+        <div className="theme-bg-primary px-6 py-24 ">
           <div className="max-w-6xl mx-auto grid grid-cols-1 md:grid-cols-[300px_1fr_200px] gap-12 md:gap-16 items-start">
 
             {/* Photo */}
             <div className="w-full aspect-square theme-bg-card theme-border-subtle border flex items-center justify-center">
-              <span className="text-sm theme-text-muted">photo</span>
+              <img
+                src={theme == 'dark' ? "images/image2.png" : "images/headshot.jpg"}
+                alt="Profile"
+                className="w-full h-full object-cover"
+              />
             </div>
 
             {/* Text */}
-            <div className="flex flex-col justify-center">
+            <div className="flex flex-col justify-center md:min-w-[300px]">
               <p className="text-lg tracking-wider theme-text-muted leading-relaxed mb-4 max-w-xl">
                 I'm Mário, a full-stack developer based in Slovakia, currently
                 studying in Brno.
@@ -106,13 +112,8 @@ export function About() {
                 watching something from my IMDB watchlist.
               </p>
               <p className="text-lg tracking-wider theme-text-muted leading-relaxed mb-4 max-w-xl">
-                I love getting better at what I do — there's a real joy in
-                tackling something that seemed daunting at first and realizing
-                it's not as hard as it looked. I'm always hunting for new
-                perspectives, tools, and tricks. I also really enjoy helping
-                people and seeing how others approach the same problems
-                differently than I would.
-              </p>
+                I love getting better at what I do. I'm always hunting for new
+                perspectives, tools, and tricks.</p>
             </div>
 
             {/* Facts ticker — CSS marquee */}

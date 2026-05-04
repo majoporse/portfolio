@@ -15,6 +15,7 @@ import { ThemeToggle } from "./components/ThemeToggle";
 import { WebGLBackground } from "./components/WebGLBackground";
 
 export const links: Route.LinksFunction = () => [
+  { rel: "icon", href: "/favicon.svg" },
   { rel: "preconnect", href: "https://fonts.googleapis.com" },
   {
     rel: "preconnect",
