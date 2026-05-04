@@ -1,4 +1,37 @@
+# Build artifacts
 .react-router
 build
 node_modules
+
+# Version control
+.git
+.gitignore
+.gitattributes
+
+# Documentation
 README.md
+docs
+
+# Environment files
+.env
+.env.*
+.env.local
+.env.development
+.env.production
+
+# IDE and editor files
+.vscode
+.idea
+*.swp
+*.swo
+
+# Test coverage
+coverage
+.nyc_output
+
+# OS files
+.DS_Store
+Thumbs.db
+
+# Type-generated files
+.react-router/types
