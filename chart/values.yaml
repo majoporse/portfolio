@@ -1,9 +1,14 @@
 replicaCount: 1
 
 image:
-  repository: portfolio
+  repository: registry.hatal.cc/portfolio/frontend
   tag: latest
   pullPolicy: IfNotPresent
+
+registry:
+  username: "admin"
+  password: ""
+  email: ""
 
 containerPort: 3000
 

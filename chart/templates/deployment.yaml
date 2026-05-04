@@ -26,6 +26,10 @@ spec:
         app.kubernetes.io/version: {{ .Chart.AppVersion | quote }}
         app.kubernetes.io/managed-by: {{ .Release.Service }}
     spec:
+      {{- if .Values.registry.username }}
+      imagePullSecrets:
+        - name: {{ include "portfolio.fullname" . }}-registry
+      {{- end }}
       containers:
         - name: portfolio
           image: "{{ .Values.image.repository }}:{{ .Values.image.tag }}"
