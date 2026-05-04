@@ -3,11 +3,11 @@ import { motion, useMotionValue, useAnimationFrame } from "framer-motion";
 import { SectionHeader } from "./SectionHeader";
 
 const categories = [
-  { title: "C#", skills: ["C#", ".NET", "ASP.NET MVC", "Entity Framework", "MediatR", "Wolverine"] },
-  { title: "Python", skills: ["Python", "FastAPI", "Django", "PyTorch Lightning", "MLflow", "Pydantic"] },
-  { title: "Rust", skills: ["Rust", "Actix-web", "Diesel", "Sqlx", "Dioxus"] },
-  { title: "TypeScript", skills: ["TypeScript", "React", "JavaScript", "jQuery", "Bootstrap"] },
-  { title: "Java", skills: ["Java", "Spring", "Quarkus", "Hibernate"] },
+  { title: "C#", skills: [".NET", "ASP.NET MVC", "Entity Framework", "MediatR", "Wolverine"] },
+  { title: "Python", skills: [ "FastAPI", "Django", "PyTorch Lightning", "MLflow", "Pydantic"] },
+  { title: "Rust", skills: [ "Actix-web", "Diesel", "Sqlx", "Dioxus"] },
+  { title: "TypeScript", skills: [ "React", "JavaScript", "jQuery", "Bootstrap"] },
+  { title: "Java", skills: [ "Spring", "Quarkus", "Hibernate"] },
   { title: "DevOps", skills: ["Docker", "Kubernetes", "Terraform", "Helm", "GitHub Pipelines"] },
   { title: "Cloud", skills: ["AWS", "Azure", "Azure Blob Storage", "MinIO"] },
   { title: "Data", skills: ["PostgreSQL", "MongoDB", "SQLite", "Redis", "Kafka"] },
