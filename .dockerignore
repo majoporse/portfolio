@@ -15,15 +15,17 @@ docs
 # Environment files
 .env
 .env.*
-.env.local
-.env.development
-.env.production
 
 # IDE and editor files
 .vscode
 .idea
 *.swp
 *.swo
+
+# Cache and logs
+.cache
+*.log
+npm-debug.log*
 
 # Test coverage
 coverage
@@ -32,6 +34,3 @@ coverage
 # OS files
 .DS_Store
 Thumbs.db
-
-# Type-generated files
-.react-router/types
