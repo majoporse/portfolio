@@ -3,6 +3,7 @@ import { projects } from "../constants/projects";
 import { motion } from "framer-motion";
 import { useEffect } from "react";
 import type { Route } from "./+types/projects.$id";
+import MarqueeGrid from "~/components/MarqueeGrid";
 
 export function meta({ data }: Route.MetaArgs) {
   if (!data?.project) {
@@ -31,10 +32,10 @@ export default function Project() {
   return (
     <motion.article
       transition={{ duration: 0.4, ease: "easeOut" }}
-      className="min-h-screen theme-bg-primary max-w-5xl mx-auto"
+      className="min-h-screen theme-bg-primary max-w-5xl justify-center mx-auto flex flex-col px-25"
     >
       {/* Back Navigation */}
-      <div className="max-w-4xl mx-auto px-6 pt-8 pb-4">
+      <div className="w-full max-w-4xl mx-auto pt-8 pb-4">
         <Link
           to="/#work"
           className="inline-flex items-center gap-2 theme-text-muted hover:theme-text-primary transition-colors text-sm font-medium tracking-wide"
@@ -47,7 +48,7 @@ export default function Project() {
       </div>
 
       {/* Hero Section */}
-      <header className="max-w-4xl mx-auto px-6 pt-8 pb-12">
+      <div className="w-full mx-auto pt-8 pb-12">
         <motion.div
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
@@ -67,21 +68,10 @@ export default function Project() {
             {project.description}
           </p>
         </motion.div>
-      </header>
+      </div>
 
       {/* Featured Image Placeholder */}
-      {project.images && project.images.length > 0 && (
-        <motion.div
-          initial={{ opacity: 0, scale: 0.95 }}
-          animate={{ opacity: 1, scale: 1 }}
-          transition={{ duration: 0.6, delay: 0.2 }}
-          className="max-w-5xl mx-auto px-6 mb-16"
-        >
-          <div className="aspect-video bg-gradient-to-br from-gray-100 to-gray-200 dark:from-gray-800 dark:to-gray-900 rounded-2xl flex items-center justify-center theme-border-medium border">
-            <span className="theme-text-muted text-sm uppercase tracking-wider">Featured Image</span>
-          </div>
-        </motion.div>
-      )}
+      <MarqueeGrid images={project.images ?? []} altPrefix={project.title} className="w-full mx-auto pb-10"/>
 
       {/* Blog Content */}
       <div className="max-w-3xl mx-auto px-6 pb-20">
@@ -91,7 +81,7 @@ export default function Project() {
             initial={{ opacity: 0, y: 15 }}
             whileInView={{ opacity: 1, y: 0 }}
             viewport={{ once: true, margin: "-50px" }}
-            transition={{ duration: 0.5, delay: index * 0.1 }}
+            transition={{ duration: 0.5, delay: 0.1 }}
             className="text-lg leading-relaxed theme-text-primary mb-8"
           >
             {paragraph}

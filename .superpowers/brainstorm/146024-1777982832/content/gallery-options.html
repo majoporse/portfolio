@@ -1,0 +1,82 @@
+<h2>Image Gallery Options</h2>
+<p class="subtitle">Choose a sliding preview style for your project images</p>
+
+<div class="split">
+  <div class="mockup">
+    <div class="mockup-header">Option A: Slideshow with Arrows</div>
+    <div class="mockup-body" style="padding: 20px;">
+      <div style="position: relative; background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); border-radius: 12px; aspect-ratio: 16/9; display: flex; align-items: center; justify-content: center; color: white;">
+        <button style="position: absolute; left: 10px; background: rgba(255,255,255,0.2); border: none; color: white; width: 40px; height: 40px; border-radius: 50%; cursor: pointer; font-size: 20px;">‹</button>
+        <div style="text-align: center;">
+          <div style="font-size: 48px; margin-bottom: 8px;">🖼️</div>
+          <div style="font-size: 14px; opacity: 0.9;">Image 1 of 3</div>
+        </div>
+        <button style="position: absolute; right: 10px; background: rgba(255,255,255,0.2); border: none; color: white; width: 40px; height: 40px; border-radius: 50%; cursor: pointer; font-size: 20px;">›</button>
+        <div style="position: absolute; bottom: 10px; left: 50%; transform: translateX(-50%); display: flex; gap: 6px;">
+          <div style="width: 8px; height: 8px; border-radius: 50%; background: white;"></div>
+          <div style="width: 8px; height: 8px; border-radius: 50%; background: rgba(255,255,255,0.4);"></div>
+          <div style="width: 8px; height: 8px; border-radius: 50%; background: rgba(255,255,255,0.4);"></div>
+        </div>
+      </div>
+      <p style="text-align: center; margin-top: 12px; font-size: 12px; color: var(--text-muted);">Framer Motion: animate opacity + x position</p>
+    </div>
+  </div>
+
+  <div class="mockup">
+    <div class="mockup-header">Option B: Swipeable Carousel</div>
+    <div class="mockup-body" style="padding: 20px;">
+      <div style="position: relative; background: linear-gradient(135deg, #f093fb 0%, #f5576c 100%); border-radius: 12px; aspect-ratio: 16/9; overflow: hidden; display: flex; align-items: center; justify-content: center; color: white;">
+        <div style="display: flex; gap: 8px; padding: 0 20px;">
+          <div style="min-width: 100%; background: rgba(255,255,255,0.15); border-radius: 8px; display: flex; align-items: center; justify-content: center; font-size: 48px;">🖼️</div>
+          <div style="min-width: 100%; background: rgba(255,255,255,0.15); border-radius: 8px; display: flex; align-items: center; justify-content: center; font-size: 48px;">🎨</div>
+          <div style="min-width: 100%; background: rgba(255,255,255,0.15); border-radius: 8px; display: flex; align-items: center; justify-content: center; font-size: 48px;">📸</div>
+        </div>
+        <div style="position: absolute; bottom: 10px; left: 50%; transform: translateX(-50%); display: flex; gap: 6px;">
+          <div style="width: 8px; height: 8px; border-radius: 50%; background: white;"></div>
+          <div style="width: 8px; height: 8px; border-radius: 50%; background: rgba(255,255,255,0.4);"></div>
+          <div style="width: 8px; height: 8px; border-radius: 50%; background: rgba(255,255,255,0.4);"></div>
+        </div>
+      </div>
+      <p style="text-align: center; margin-top: 12px; font-size: 12px; color: var(--text-muted);">Framer Motion: drag="x" with snap points</p>
+    </div>
+  </div>
+</div>
+
+<div class="section" style="margin-top: 20px;">
+  <div class="mockup">
+    <div class="mockup-header">Option C: Thumbnail Strip + Main Image</div>
+    <div class="mockup-body" style="padding: 20px;">
+      <div style="background: linear-gradient(135deg, #4facfe 0%, #00f2fe 100%); border-radius: 12px; aspect-ratio: 16/9; display: flex; align-items: center; justify-content: center; color: white; font-size: 48px; margin-bottom: 12px;">🖼️</div>
+      <div style="display: flex; gap: 8px; justify-content: center;">
+        <div style="width: 60px; height: 40px; background: rgba(79, 172, 254, 0.8); border-radius: 6px; border: 2px solid white;"></div>
+        <div style="width: 60px; height: 40px; background: rgba(79, 172, 254, 0.4); border-radius: 6px;"></div>
+        <div style="width: 60px; height: 40px; background: rgba(79, 172, 254, 0.4); border-radius: 6px;"></div>
+      </div>
+      <p style="text-align: center; margin-top: 12px; font-size: 12px; color: var(--text-muted);">Framer Motion: animate main image opacity + scale</p>
+    </div>
+  </div>
+</div>
+
+<div class="options" data-multiselect style="margin-top: 20px;">
+  <div class="option" data-choice="a" onclick="toggleSelect(this)">
+    <div class="letter">A</div>
+    <div class="content">
+      <h3>Slideshow with Arrows</h3>
+      <p>Clean navigation with prev/next arrows and dot indicators. Good for few images.</p>
+    </div>
+  </div>
+  <div class="option" data-choice="b" onclick="toggleSelect(this)">
+    <div class="letter">B</div>
+    <div class="content">
+      <h3>Swipeable Carousel</h3>
+      <p>Mobile-friendly drag-to-swipe experience. Great for touch devices and many images.</p>
+    </div>
+  </div>
+  <div class="option" data-choice="c" onclick="toggleSelect(this)">
+    <div class="letter">C</div>
+    <div class="content">
+      <h3>Thumbnail Strip</h3>
+      <p>Main image with clickable thumbnails below. Good overview of all images at once.</p>
+    </div>
+  </div>
+</div>
