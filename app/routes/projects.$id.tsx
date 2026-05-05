@@ -88,22 +88,25 @@ export default function Project() {
           </motion.p>
         ))}
 
-        {/* Project Link */}
+        {/* Project Links */}
         <motion.div
           initial={{ opacity: 0 }}
           whileInView={{ opacity: 1 }}
           viewport={{ once: true }}
           transition={{ duration: 0.5, delay: 0.3 }}
-          className="mt-12 pt-8 border-t theme-border-medium"
+          className="mt-12 pt-8 border-t theme-border-medium flex gap-6"
         >
-          <a
-            href={project.link}
-            target="_blank"
-            rel="noopener noreferrer"
-            className="inline-block text-[10px] font-black tracking-[0.4em] uppercase theme-text-primary border-b-2 theme-border-accent pb-1 theme-hover-text-accent transition-colors"
-          >
-            {project.linkText} →
-          </a>
+          {Object.entries(project.links).map(([text, url]) => (
+            <a
+              key={text}
+              href={url}
+              target="_blank"
+              rel="noopener noreferrer"
+              className="inline-block text-[10px] font-black tracking-[0.4em] uppercase theme-text-primary border-b-2 theme-border-accent pb-1 theme-hover-text-accent transition-colors"
+            >
+              {text} →
+            </a>
+          ))}
         </motion.div>
       </div>
     </motion.article>
