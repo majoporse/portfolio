@@ -32,7 +32,7 @@ export default function Project() {
   return (
     <motion.article
       transition={{ duration: 0.4, ease: "easeOut" }}
-      className="min-h-screen theme-bg-primary max-w-5xl justify-center mx-auto flex flex-col px-25"
+      className="min-h-screen theme-bg-primary max-w-5xl justify-center mx-auto flex flex-col px-5 md:px-25"
     >
       {/* Back Navigation */}
       <div className="w-full max-w-4xl mx-auto pt-8 pb-4">

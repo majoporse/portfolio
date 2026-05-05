@@ -65,21 +65,6 @@ export const projects: Project[] = [
     ],
   },
   {
-    id: "textinatorx",
-    title: "TextInatorX",
-    description:
-      "A web application designed to extract text from images using OCR, built on a robust microservice architecture orchestrated with Kafka.",
-    backgroundLabel: "TEXTINATORX",
-    skills: [".NET", "C#", "Kafka", "MongoDB", "Azure Blob Storage", "Docker"],
-    links: { "View GitHub": "https://github.com/majoporse/TextInatorX" },
-    blogContent: [
-      "I started this project primarily as a way to teach myself Apache Kafka and the principles of distributed systems, as my university curriculum didn't dive as deeply into those topics as I wanted. I’ve always been curious about how to properly scale applications using multiple replicas and how to manage heavy computational tasks—like OCR—within a web environment without bottlenecking the user experience.",
-      "The architecture is built around three core microservices: a Frontend, Image Storage, and Image Processing, all seamlessly integrated using .NET Aspire. To handle communication between these services, I used Wolverine, a mediator framework with built-in Kafka support. While the project is somewhat synthetic in nature, it served as a perfect playground for learning how to handle message queues and brokers in a real-world C# environment.",
-      "The choice of databases was driven mostly by curiosity; I wanted to experiment with different storage paradigms. I used Azure Blob Storage for raw image data, while choosing SQLite and MongoDB simply because I wanted to try out a document database and a lightweight relational setup in the same project.",
-    ],
-    images: [],
-  },
-  {
     id: "juiceworld",
     title: "JuiceWorld",
     description:
@@ -101,6 +86,21 @@ export const projects: Project[] = [
       "This was a school project developed for a 'Systems and Applications Development' course, where the assignment was to build a functional e-commerce platform. My partner, Michal Bilanin, and I decided it would be a funny twist to build an anabolic steroid store. It was a collaborative group effort, Michal props to Michal for handling the majority of the front-end work.",
       "This project served as my introduction to the fundamentals of software architecture. It was designed using a classic three-layer monolithic approach, featuring a front-end built with ASP.NET MVC, an API powered by .NET Core, and Entity Framework for data management. For persistence, we used a PostgreSQL database, and the entire system was containerized with Docker to streamline local development.",
       "The platform includes essential e-commerce features such as customer accounts, advanced product filtering, and a dedicated administrator interface. While the application is not currently hosted, I previously deployed it to the Azure cloud as part of a separate course focused on cloud infrastructure. Although it isn't live, the complete source code is open to the public for review.",
+    ],
+    images: ["/images/projects/juiceworld/homepage.png", "/images/projects/juiceworld/item.png", "/images/projects/juiceworld/items.png"],
+  },
+  {
+    id: "textinatorx",
+    title: "TextInatorX",
+    description:
+      "A web application designed to extract text from images using OCR, built on a robust microservice architecture orchestrated with Kafka.",
+    backgroundLabel: "TEXTINATORX",
+    skills: [".NET", "C#", "Kafka", "MongoDB", "Azure Blob Storage", "Docker"],
+    links: { "View GitHub": "https://github.com/majoporse/TextInatorX" },
+    blogContent: [
+      "I started this project primarily as a way to teach myself Apache Kafka and the principles of distributed systems, as my university curriculum didn't dive as deeply into those topics as I wanted. I’ve always been curious about how to properly scale applications using multiple replicas and how to manage heavy computational tasks—like OCR—within a web environment without bottlenecking the user experience.",
+      "The architecture is built around three core microservices: a Frontend, Image Storage, and Image Processing, all seamlessly integrated using .NET Aspire. To handle communication between these services, I used Wolverine, a mediator framework with built-in Kafka support. While the project is somewhat synthetic in nature, it served as a perfect playground for learning how to handle message queues and brokers in a real-world C# environment.",
+      "The choice of databases was driven mostly by curiosity; I wanted to experiment with different storage paradigms. I used Azure Blob Storage for raw image data, while choosing SQLite and MongoDB simply because I wanted to try out a document database and a lightweight relational setup in the same project.",
     ],
     images: [],
   },
