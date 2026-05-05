@@ -306,7 +306,7 @@ export function WebGLBackground() {
       <div
         className="fixed inset-0 pointer-events-none"
         style={{
-          zIndex: 0,
+          zIndex: -1,
         }}
       >
         <canvas ref={canvasRef} className="absolute inset-0 w-full h-full" />

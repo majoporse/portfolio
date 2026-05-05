@@ -1,8 +1,8 @@
-import type { Route } from "./+types/project";
 import { useLoaderData, Link } from "react-router";
 import { projects } from "../constants/projects";
 import { motion } from "framer-motion";
 import { useEffect } from "react";
+import type { Route } from "./+types/projects.$id";
 
 export function meta({ data }: Route.MetaArgs) {
   if (!data?.project) {
@@ -17,6 +17,7 @@ export function meta({ data }: Route.MetaArgs) {
 }
 
 export function loader({ params }: Route.LoaderArgs) {
+  console.log("Loading project with ID:", params.id);
   const project = projects.find((p) => p.id === params.id);
   if (!project) {
     throw new Response("Not Found", { status: 404 });
@@ -27,17 +28,10 @@ export function loader({ params }: Route.LoaderArgs) {
 export default function Project() {
   const { project } = useLoaderData<typeof loader>();
 
-  useEffect(() => {
-    window.scrollTo(0, 0);
-  }, []);
-
   return (
     <motion.article
-      initial={{ opacity: 0, y: 20 }}
-      animate={{ opacity: 1, y: 0 }}
-      exit={{ opacity: 0, y: -20 }}
       transition={{ duration: 0.4, ease: "easeOut" }}
-      className="min-h-screen theme-bg-primary"
+      className="min-h-screen theme-bg-primary max-w-5xl mx-auto"
     >
       {/* Back Navigation */}
       <div className="max-w-4xl mx-auto px-6 pt-8 pb-4">

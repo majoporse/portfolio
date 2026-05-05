@@ -1,0 +1,85 @@
+<h2>Project Page Content Layout</h2>
+<p class="subtitle">What should the full project page contain and how should it be organized?</p>
+
+<div class="cards">
+  <div class="card" data-choice="blog-only" onclick="toggleSelect(this)">
+    <div class="card-image">
+      <div class="mockup" style="border: 2px dashed #666; padding: 10px;">
+        <div style="background: white; padding: 40px; max-width: 700px; margin: 0 auto;">
+          <div style="margin-bottom: 30px;">
+            <h3 style="margin: 0 0 10px 0;">SingSync</h3>
+            <div style="display: flex; gap: 8px;">
+              <span style="background: #e0e0e0; padding: 4px 10px; border-radius: 12px; font-size: 11px;">Microservices</span>
+              <span style="background: #e0e0e0; padding: 4px 10px; border-radius: 12px; font-size: 11px;">Python</span>
+            </div>
+          </div>
+          <div style="line-height: 1.8; color: #333;">
+            <p>A distributed karaoke system that uses AI to separate vocals from any song in real-time.</p>
+            <p>Built with Python microservices running on Kubernetes for scalability.</p>
+            <p>Features real-time lyric synchronization across multiple devices.</p>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="card-body">
+      <h3>Blog Content Only</h3>
+      <p>Simple layout with title, skills, and blog content paragraphs. Clean and minimal.</p>
+    </div>
+  </div>
+
+  <div class="card" data-choice="blog-with-images" onclick="toggleSelect(this)">
+    <div class="card-image">
+      <div class="mockup" style="border: 2px dashed #666; padding: 10px;">
+        <div style="background: white; padding: 40px; max-width: 800px; margin: 0 auto;">
+          <h3 style="margin: 0 0 20px 0;">SingSync</h3>
+          <div style="background: #f0f0f0; height: 200px; border-radius: 8px; margin-bottom: 20px; display: flex; align-items: center; justify-content: center; color: #999;">Image Placeholder</div>
+          <div style="line-height: 1.8; color: #333;">
+            <p>A distributed karaoke system...</p>
+            <div style="background: #f0f0f0; height: 150px; border-radius: 8px; margin: 20px 0; display: flex; align-items: center; justify-content: center; color: #999;">Image Placeholder</div>
+            <p>Built with Python microservices...</p>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="card-body">
+      <h3>Blog + Images</h3>
+      <p>Blog content with images interspersed. More visual, good for showing screenshots or diagrams.</p>
+    </div>
+  </div>
+
+  <div class="card" data-choice="magazine" onclick="toggleSelect(this)">
+    <div class="card-image">
+      <div class="mockup" style="border: 2px dashed #666; padding: 10px;">
+        <div style="background: white; padding: 40px; max-width: 900px; margin: 0 auto;">
+          <div style="display: flex; gap: 30px; margin-bottom: 30px;">
+            <div style="flex: 1;">
+              <h3 style="margin: 0 0 15px 0;">SingSync</h3>
+              <p style="color: #666; font-size: 14px;">Orchestrating AI-driven vocal separation...</p>
+            </div>
+            <div style="flex: 1;">
+              <div style="background: #f0f0f0; height: 180px; border-radius: 8px; display: flex; align-items: center; justify-content: center; color: #999;">Main Image</div>
+            </div>
+          </div>
+          <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 20px;">
+            <div style="background: #f9f9f9; padding: 20px; border-radius: 8px;">
+              <h4 style="margin: 0 0 10px 0;">Tech Stack</h4>
+              <p style="font-size: 13px; color: #666;">Microservices, Python, K8s</p>
+            </div>
+            <div style="background: #f9f9f9; padding: 20px; border-radius: 8px;">
+              <h4 style="margin: 0 0 10px 0;">Features</h4>
+              <p style="font-size: 13px; color: #666;">Real-time sync, AI processing</p>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="card-body">
+      <h3>Magazine / Editorial</h3>
+      <p>Rich layout with sidebar info, grids, tech stack highlights. More like a case study.</p>
+    </div>
+  </div>
+</div>
+
+<p style="margin-top: 30px; text-align: center; color: #888; font-size: 14px;">
+  Take a look and let me know which content layout you prefer. Click to select.
+</p>

@@ -1,0 +1,76 @@
+<h2>Full Page Expansion Method</h2>
+<p class="subtitle">How should the project expand to full page?</p>
+
+<div class="cards">
+  <div class="card" data-choice="route" onclick="toggleSelect(this)">
+    <div class="card-image">
+      <div class="mockup" style="border: 2px dashed #666; padding: 10px;">
+        <div style="background: #f5f5f5; padding: 20px; border-radius: 8px;">
+          <div style="background: white; padding: 15px; border-radius: 6px; margin-bottom: 10px; opacity: 0.5;">
+            <div style="height: 8px; background: #e0e0e0; width: 60%; margin-bottom: 8px;"></div>
+            <div style="height: 6px; background: #e0e0e0; width: 40%;"></div>
+          </div>
+          <div style="background: white; padding: 30px; border-radius: 6px; border: 2px solid #4CAF50;">
+            <div style="font-size: 12px; color: #4CAF50; margin-bottom: 10px;">→ /projects/singsync</div>
+            <h3 style="margin: 0 0 15px 0;">SingSync - Full Page</h3>
+            <div style="height: 6px; background: #e0e0e0; width: 100%; margin-bottom: 8px;"></div>
+            <div style="height: 6px; background: #e0e0e0; width: 90%; margin-bottom: 8px;"></div>
+            <div style="height: 6px; background: #e0e0e0; width: 95%;"></div>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="card-body">
+      <h3>New Route (Recommended)</h3>
+      <p>Navigate to /projects/:id. Uses React Router. Shareable URLs, proper back button, clean separation.</p>
+    </div>
+  </div>
+
+  <div class="card" data-choice="inline" onclick="toggleSelect(this)">
+    <div class="card-image">
+      <div class="mockup" style="border: 2px dashed #666; padding: 10px;">
+        <div style="background: #f5f5f5; padding: 20px; border-radius: 8px; position: relative; overflow: hidden;">
+          <div style="background: white; padding: 15px; border-radius: 6px; transform: scale(0.95); opacity: 0.3;">
+            <div style="height: 8px; background: #e0e0e0; width: 60%; margin-bottom: 8px;"></div>
+            <div style="height: 6px; background: #e0e0e0; width: 40%;"></div>
+          </div>
+          <div style="background: white; padding: 30px; border-radius: 6px; position: absolute; top: 20px; left: 20px; right: 20px; bottom: 20px; border: 2px solid #2196F3; overflow-y: auto;">
+            <h3 style="margin: 0 0 15px 0;">SingSync - Expanded In-Place</h3>
+            <p style="font-size: 12px; color: #666;">With Framer Motion animation from card position...</p>
+            <div style="height: 6px; background: #e0e0e0; width: 100%; margin-bottom: 8px;"></div>
+            <div style="height: 6px; background: #e0e0e0; width: 90%; margin-bottom: 8px;"></div>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="card-body">
+      <h3>Inline Expansion</h3>
+      <p>Card expands in-place with Framer Motion. Cool animation but no shareable URL. More complex state management.</p>
+    </div>
+  </div>
+
+  <div class="card" data-choice="overlay" onclick="toggleSelect(this)">
+    <div class="card-image">
+      <div class="mockup" style="border: 2px dashed #666; padding: 10px;">
+        <div style="background: #f5f5f5; padding: 20px; border-radius: 8px; position: relative;">
+          <div style="background: white; padding: 15px; border-radius: 6px; filter: blur(2px);">
+            <div style="height: 8px; background: #e0e0e0; width: 60%; margin-bottom: 8px;"></div>
+            <div style="height: 6px; background: #e0e0e0; width: 40%;"></div>
+          </div>
+          <div style="background: white; padding: 30px; border-radius: 6px; position: absolute; top: 10px; left: 10px; right: 10px; bottom: 10px; border: 2px solid #FF9800; box-shadow: 0 10px 40px rgba(0,0,0,0.3);">
+            <h3 style="margin: 0 0 15px 0;">SingSync - Fullscreen Overlay</h3>
+            <p style="font-size: 12px; color: #666;">Fills viewport with backdrop...</p>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="card-body">
+      <h3>Fullscreen Overlay</h3>
+      <p>Overlay fills the entire viewport with backdrop. No URL change. Escape key or X to close. Smooth animation.</p>
+    </div>
+  </div>
+</div>
+
+<p style="margin-top: 30px; text-align: center; color: #888; font-size: 14px;">
+  Take a look and let me know which expansion method you prefer. Click to select.
+</p>
